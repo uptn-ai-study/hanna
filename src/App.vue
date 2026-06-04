@@ -2,15 +2,6 @@
 import { ref, onMounted, computed } from 'vue'
 
 // ── 타입 ──────────────────────────────────────────────────────────────
-interface Reward {
-  id: number
-  name: string
-  label: string
-  color: string
-  probability: number
-  weekly_limit: number
-  points_value: number
-}
 
 interface HistoryItem {
   won_at: string
