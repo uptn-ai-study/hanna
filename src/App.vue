@@ -22,13 +22,13 @@ const errorMsg = ref('')
 
 // 룰렛 칸 (서버 rewards 순서와 동일하게 하드코딩)
 const SLOTS = [
-  { label: '꽝',       color: '#374151' },
-  { label: '+5P',      color: '#6366f1' },
-  { label: '+10P',     color: '#8b5cf6' },
-  { label: '+20P',     color: '#a78bfa' },
-  { label: '☕ 커피',  color: '#f59e0b' },
-  { label: '⭐ 스벅',  color: '#10b981' },
-  { label: '🍗 치킨',  color: '#ef4444' },
+  { label: '꽝',       color: '#666666' }, // 비 강조 본문 컬러
+  { label: '+5P',      color: '#8C8EFF' },
+  { label: '+10P',     color: '#5F61FF' }, // 일반 강조 컬러
+  { label: '+20P',     color: '#3B3DFF' },
+  { label: '☕ 커피',  color: '#FFA825' },
+  { label: '⭐ 스벅',  color: '#00BFA5' },
+  { label: '🍗 치킨',  color: '#FF2034' }, // 꼭 봐야하는 강조 컬러
 ]
 
 const SLOT_COUNT = SLOTS.length
@@ -142,16 +142,16 @@ onMounted(fetchUser)
   <div class="app">
     <!-- 헤더 -->
     <header class="header">
-      <h1 class="title">🎡 포인트 룰렛</h1>
+      <h1 class="title gui-title-1">🎡 포인트 룰렛</h1>
       <div class="points-badge">
-        <span class="points-label">보유 포인트</span>
-        <span class="points-value">{{ points.toLocaleString() }}P</span>
+        <span class="points-label gui-sub">보유 포인트</span>
+        <span class="points-value gui-title-2">{{ points.toLocaleString() }}P</span>
       </div>
     </header>
 
     <!-- 테스트 토큰 입력 -->
     <div class="token-row">
-      <input v-model="token" placeholder="인증 토큰" class="token-input" @change="fetchUser" />
+      <input v-model="token" placeholder="인증 토큰" class="token-input gui-body" @change="fetchUser" />
       <button class="btn-reset" @click="resetPoints">🔄 10,000P 리셋</button>
     </div>
 
@@ -162,17 +162,17 @@ onMounted(fetchUser)
       <div class="wheel-container" :style="wheelStyle">
         <svg :width="svgSize" :height="svgSize" :viewBox="`0 0 ${svgSize} ${svgSize}`">
           <g v-for="(s, i) in slicePaths" :key="i">
-            <path :d="s.path" :fill="s.color" stroke="#0f172a" stroke-width="2" />
+            <path :d="s.path" :fill="s.color" stroke="#FFFFFF" stroke-width="2.5" />
             <text
               :x="s.lx" :y="s.ly"
               text-anchor="middle" dominant-baseline="middle"
               fill="white" font-size="12" font-weight="700"
-              font-family="'Pretendard', 'Inter', sans-serif"
+              font-family="'SUIT', sans-serif"
             >{{ s.label }}</text>
           </g>
           <!-- 중앙 원 -->
-          <circle :cx="cx" :cy="cy" r="20" fill="#0f172a" stroke="#6366f1" stroke-width="3"/>
-          <circle :cx="cx" :cy="cy" r="8" fill="#6366f1" />
+          <circle :cx="cx" :cy="cy" r="20" fill="#FFFFFF" stroke="#5F61FF" stroke-width="3"/>
+          <circle :cx="cx" :cy="cy" r="8" fill="#5F61FF" />
         </svg>
       </div>
     </div>
@@ -189,17 +189,40 @@ onMounted(fetchUser)
     </button>
 
     <!-- 에러 메시지 -->
-    <p v-if="errorMsg" class="error-msg">{{ errorMsg }}</p>
+    <p v-if="errorMsg" class="error-msg gui-body">{{ errorMsg }}</p>
 
-    <!-- 당첨 내역 -->
+    <!-- 당첨 내역 (Table GUI 가이드 적용) -->
     <div class="history" v-if="history.length">
-      <h2 class="history-title">최근 당첨 내역</h2>
-      <ul class="history-list">
-        <li v-for="(item, i) in history" :key="i" class="history-item">
-          <span class="history-dot" :style="{ background: item.color }"></span>
-          <span class="history-name">{{ item.name }}</span>
-          <span class="history-date">{{ new Date(item.won_at).toLocaleString('ko-KR') }}</span>
-        </li>
+      <h2 class="history-title gui-title-3">최근 당첨 내역</h2>
+      <div class="table-wrapper">
+        <table class="gui-table">
+          <thead>
+            <tr>
+              <th class="col-reward">경품명</th>
+              <th class="col-date">당첨 일시</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, i) in history" :key="i">
+              <td class="col-reward">
+                <span class="reward-tag" :style="{ backgroundColor: item.color }"></span>
+                <span class="reward-name">{{ item.name }}</span>
+              </td>
+              <td class="col-date gui-sub-2">{{ new Date(item.won_at).toLocaleString('ko-KR') }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 참여 안내 및 유의사항 (Bullet GUI 가이드 적용) -->
+    <div class="notice-section">
+      <h3 class="notice-title gui-title-3">참여 안내 및 유의사항</h3>
+      <ul class="gui-bullet-list">
+        <li class="gui-body">1회 룰렛 참여 시 보유 포인트에서 <strong>10P가 즉시 차감</strong>됩니다.</li>
+        <li class="gui-body">포인트가 부족할 경우 룰렛을 돌릴 수 없습니다. (상단의 리셋 버튼을 통해 포인트를 충전할 수 있습니다.)</li>
+        <li class="gui-body">일부 고가 경품(치킨, 스타벅스 등)의 경우 <strong>일주일 당첨 제한 횟수</strong>가 적용됩니다.</li>
+        <li class="gui-body">당첨된 모든 포인트는 보유 포인트에 즉시 합산되어 반영됩니다.</li>
       </ul>
     </div>
 
@@ -208,9 +231,9 @@ onMounted(fetchUser)
       <div v-if="showResult" class="modal-overlay" @click="closeResult">
         <div class="modal-card" @click.stop>
           <div class="modal-icon" :style="{ background: resultColor }">🎉</div>
-          <h2 class="modal-title">당첨!</h2>
-          <p class="modal-reward" :style="{ color: resultColor }">{{ resultText }}</p>
-          <p class="modal-points">잔여 포인트: {{ points.toLocaleString() }}P</p>
+          <h2 class="modal-title gui-title-1">당첨!</h2>
+          <p class="modal-reward gui-title-2" :style="{ color: resultColor }">{{ resultText }}</p>
+          <p class="modal-points gui-sub">잔여 포인트: {{ points.toLocaleString() }}P</p>
           <button class="btn-close" @click="closeResult">확인</button>
         </div>
       </div>
@@ -219,20 +242,72 @@ onMounted(fetchUser)
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 .app {
+  --color-text-main: #444444;
+  --color-text-highlight: #5F61FF;
+  --color-text-alert: #FF2034;
+  --color-text-muted: #666666;
+  --color-border-outer: #DDDDDD;
+  --color-border-inner: #EBEBEB;
+  --color-table-text-1: #333333;
+  --color-table-text-2: #666666;
+  --color-table-bg: #F8F8F8;
+
   min-height: 100vh;
-  background: #0f172a;
-  color: #f1f5f9;
-  font-family: 'Inter', 'Apple SD Gothic Neo', sans-serif;
+  background: #FFFFFF;
+  color: var(--color-text-main);
+  font-family: 'SUIT', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 24px 16px 48px;
-  gap: 20px;
+  gap: 24px;
+}
+
+/* Typography Styles */
+.gui-title-1 {
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0;
+  line-height: 32px;
+  color: var(--color-text-main);
+}
+.gui-title-2 {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.3px;
+  line-height: 28px;
+  color: var(--color-text-main);
+}
+.gui-title-3 {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+  line-height: 24px;
+  color: var(--color-text-main);
+}
+.gui-body {
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 24px;
+  color: var(--color-text-main);
+}
+.gui-sub {
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: -0.3px;
+  line-height: 20px;
+  color: var(--color-text-muted);
+}
+.gui-sub-2 {
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: -0.3px;
+  line-height: 18px;
+  color: var(--color-text-muted);
 }
 
 /* 헤더 */
@@ -243,18 +318,18 @@ onMounted(fetchUser)
   justify-content: space-between;
   align-items: center;
 }
-.title { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
 .points-badge {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  background: rgba(99,102,241,0.15);
-  border: 1px solid rgba(99,102,241,0.4);
+  background: rgba(95, 97, 255, 0.08);
+  border: 1px solid rgba(95, 97, 255, 0.3);
   border-radius: 12px;
   padding: 6px 14px;
 }
-.points-label { font-size: 10px; color: #94a3b8; }
-.points-value { font-size: 18px; font-weight: 800; color: #a78bfa; }
+.points-value {
+  color: var(--color-text-highlight) !important;
+}
 
 /* 토큰 입력 */
 .token-row {
@@ -265,18 +340,21 @@ onMounted(fetchUser)
 }
 .token-input {
   flex: 1;
-  background: #1e293b;
-  border: 1px solid #334155;
-  color: #e2e8f0;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border-outer);
+  color: var(--color-text-main);
   border-radius: 10px;
   padding: 8px 12px;
-  font-size: 13px;
   outline: none;
+  transition: border-color 0.2s;
+}
+.token-input:focus {
+  border-color: var(--color-text-highlight);
 }
 .btn-reset {
-  background: #1e293b;
-  border: 1px solid #475569;
-  color: #94a3b8;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border-outer);
+  color: var(--color-text-muted);
   border-radius: 10px;
   padding: 8px 12px;
   font-size: 12px;
@@ -284,7 +362,10 @@ onMounted(fetchUser)
   white-space: nowrap;
   transition: all 0.2s;
 }
-.btn-reset:hover { border-color: #6366f1; color: #a78bfa; }
+.btn-reset:hover {
+  border-color: var(--color-text-highlight);
+  color: var(--color-text-highlight);
+}
 
 /* 룰렛 */
 .wheel-wrapper {
@@ -292,84 +373,161 @@ onMounted(fetchUser)
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 10px 0;
 }
 .pointer {
   position: absolute;
   top: -14px;
   font-size: 26px;
-  color: #f1f5f9;
+  color: var(--color-text-highlight);
   z-index: 10;
-  filter: drop-shadow(0 0 8px rgba(99,102,241,0.9));
-  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  filter: drop-shadow(0 2px 6px rgba(95, 97, 255, 0.4));
 }
 .wheel-container {
   border-radius: 50%;
+  background: #FFFFFF;
+  padding: 4px;
   box-shadow:
-    0 0 0 5px #1e293b,
-    0 0 0 8px #6366f1,
-    0 0 40px rgba(99,102,241,0.5);
+    0 0 0 1px var(--color-border-outer),
+    0 0 0 5px #FFFFFF,
+    0 0 0 8px var(--color-text-highlight),
+    0 8px 30px rgba(95, 97, 255, 0.15);
 }
 
 /* 스핀 버튼 */
 .btn-spin {
   width: 100%;
   max-width: 420px;
-  padding: 18px;
-  font-size: 17px;
-  font-weight: 800;
+  padding: 16px;
   border: none;
   border-radius: 16px;
   cursor: pointer;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, var(--color-text-highlight), #474aff);
   color: white;
-  box-shadow: 0 4px 20px rgba(99,102,241,0.5);
+  box-shadow: 0 4px 16px rgba(95, 97, 255, 0.3);
   transition: all 0.2s;
   letter-spacing: -0.3px;
+  font-weight: 700;
+  font-size: 16px;
 }
 .btn-spin:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(99,102,241,0.7);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(95, 97, 255, 0.4);
 }
 .btn-spin:disabled {
   opacity: 0.45;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
-.error-msg { color: #f87171; font-size: 14px; }
+.error-msg {
+  color: var(--color-text-alert);
+  margin-top: -8px;
+}
 
-/* 당첨 내역 */
-.history { width: 100%; max-width: 420px; }
+/* 당첨 내역 - Table 스타일 */
+.history {
+  width: 100%;
+  max-width: 420px;
+}
 .history-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: #64748b;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  margin-bottom: 12px;
 }
-.history-list { display: flex; flex-direction: column; gap: 8px; }
-.history-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #1e293b;
-  border-radius: 10px;
+.table-wrapper {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-outer);
+}
+.gui-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.gui-table th, .gui-table td {
   padding: 10px 14px;
 }
-.history-dot {
-  width: 10px; height: 10px;
+.gui-table th {
+  background-color: var(--color-table-bg);
+  color: var(--color-table-text-1);
+  font-weight: 700;
+  font-size: 13px;
+  border-bottom: 1px solid var(--color-border-inner);
+}
+.gui-table td {
+  color: var(--color-table-text-2);
+  font-size: 13px;
+  border-bottom: 1px solid var(--color-border-inner);
+}
+.gui-table tr:last-child td {
+  border-bottom: none;
+}
+.col-reward {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.reward-tag {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
+  display: inline-block;
   flex-shrink: 0;
 }
-.history-name { flex: 1; font-size: 14px; font-weight: 600; }
-.history-date { font-size: 11px; color: #64748b; }
+.reward-name {
+  font-weight: 600;
+  color: var(--color-table-text-1);
+}
+.col-date {
+  text-align: right;
+}
+
+/* 참여 안내 및 유의사항 - Bullet 스타일 */
+.notice-section {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.notice-title {
+  border-bottom: 1px solid var(--color-border-inner);
+  padding-bottom: 8px;
+}
+.gui-bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.gui-bullet-list li {
+  position: relative;
+  padding-left: 16px;
+  color: var(--color-text-muted);
+}
+.gui-bullet-list li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-text-muted);
+}
+.gui-bullet-list strong {
+  color: var(--color-text-main);
+}
 
 /* 모달 */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.75);
+  background: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -377,8 +535,9 @@ onMounted(fetchUser)
   backdrop-filter: blur(4px);
 }
 .modal-card {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border-outer);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
   border-radius: 24px;
   padding: 36px 32px;
   text-align: center;
@@ -396,23 +555,28 @@ onMounted(fetchUser)
   align-items: center;
   justify-content: center;
   font-size: 36px;
+  color: white;
 }
-.modal-title { font-size: 26px; font-weight: 900; }
-.modal-reward { font-size: 22px; font-weight: 800; }
-.modal-points { font-size: 14px; color: #94a3b8; }
 .btn-close {
   margin-top: 8px;
   padding: 12px 40px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: var(--color-text-highlight);
   color: white;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(95, 97, 255, 0.2);
+  transition: all 0.2s;
+}
+.btn-close:hover {
+  background: #474aff;
+  box-shadow: 0 6px 16px rgba(95, 97, 255, 0.3);
 }
 
 /* 모달 트랜지션 */
 .modal-enter-active, .modal-leave-active { transition: all 0.25s ease; }
 .modal-enter-from, .modal-leave-to { opacity: 0; transform: scale(0.9); }
 </style>
+
