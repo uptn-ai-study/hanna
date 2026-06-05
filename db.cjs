@@ -1,53 +1,17 @@
-const Database = require('better-sqlite3');
 const path = require('path');
+// 로컬 개발 환경용 환경변수 로드 (.env.local 선순위, .env 후순위)
+require('dotenv').config({ path: path.join(__dirname, '.env.local') });
+require('dotenv').config();
 
-const db = new Database(path.join(__dirname, 'roulette.db'));
+const { createClient } = require('@supabase/supabase-js');
 
-// WAL 모드: 동시 읽기 성능 향상
-db.pragma('journal_mode = WAL');
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-// 테이블 생성
-db.exec(`
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    token TEXT UNIQUE NOT NULL,
-    points INTEGER NOT NULL DEFAULT 10000,
-    created_at TEXT DEFAULT (datetime('now'))
-  );
-
-  CREATE TABLE IF NOT EXISTS rewards (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    label TEXT NOT NULL,
-    color TEXT NOT NULL,
-    probability REAL NOT NULL,
-    weekly_limit INTEGER NOT NULL DEFAULT 9999,
-    points_value INTEGER NOT NULL DEFAULT 0
-  );
-
-  CREATE TABLE IF NOT EXISTS win_history (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    reward_id INTEGER NOT NULL,
-    won_at TEXT DEFAULT (datetime('now')),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (reward_id) REFERENCES rewards(id)
-  );
-`);
-
-// 경품 데이터 시딩 (이미 있으면 스킵)
-const rewardCount = db.prepare('SELECT COUNT(*) as cnt FROM rewards').get();
-if (rewardCount.cnt === 0) {
-  const insertReward = db.prepare(
-    'INSERT INTO rewards (name, label, color, probability, weekly_limit, points_value) VALUES (?, ?, ?, ?, ?, ?)'
-  );
-  // 확률 합계 = 1.0
-  insertReward.run('꽝', '꽝', '#374151', 0.55, 9999, 0);
-  insertReward.run('추파춥스', '추파춥스', '#6366f1', 0.20, 9999, 0);
-  insertReward.run('마이쭈', '마이쭈', '#8b5cf6', 0.19, 9999, 0);
-  insertReward.run('배스킨라빈스 싱글레귤러', '베라',      '#f59e0b', 0.04, 5,    0);
-  insertReward.run('스타벅스 1잔', '스벅', '#10b981', 0.015, 2, 0);
-  insertReward.run('치킨 기프티콘', '치킨', '#5F61FF', 0.005, 1, 0);
+if (!supabaseUrl || !supabaseKey) {
+  console.warn("⚠️ 환경변수 SUPABASE_URL 또는 SUPABASE_SERVICE_ROLE_KEY가 설정되지 않았습니다. .env.local 파일을 확인해 주세요.");
 }
 
-module.exports = db;
+const supabase = createClient(supabaseUrl || '', supabaseKey || '');
+
+module.exports = supabase;

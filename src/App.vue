@@ -70,29 +70,16 @@ const slicePaths = computed(() =>
 
 // 휠 회전 각도 및 회전 모션 상태
 const isStopping = ref(false)
-const wheelRotation = ref(0)
+let wheelRotation = 0 // Vue reactive 우회: RAF에서 직접 DOM 조작
+const wheelRef = ref<HTMLElement | null>(null)
 
-const wheelStyle = computed(() => {
-  if (isSpinning.value && !isStopping.value) {
-    // START 상태: JS RAF(requestAnimationFrame)로 회전하므로 transition 제거
-    return {
-      transform: `rotate(${wheelRotation.value}deg)`,
-      transition: 'none',
-    }
-  } else if (isStopping.value) {
-    // STOP 클릭 후: 감속(3초) transition 적용
-    return {
-      transform: `rotate(${wheelRotation.value}deg)`,
-      transition: 'transform 3s cubic-bezier(0.23, 1, 0.32, 1)',
-    }
-  } else {
-    // 대기 상태
-    return {
-      transform: `rotate(${wheelRotation.value}deg)`,
-      transition: 'none',
-    }
-  }
-})
+// 휠 DOM에 직접 transform 적용 (Vue 렌더 사이클 우회 → 울렁거림 제거)
+function setWheelTransform(deg: number, transition = 'none') {
+  if (!wheelRef.value) return
+  wheelRef.value.style.transition = transition
+  wheelRef.value.style.transformOrigin = '150px 150px' // SVG 중심 고정
+  wheelRef.value.style.transform = `rotate(${deg}deg)`
+}
 
 // ── API 헬퍼 ──────────────────────────────────────────────────────────
 const authHeaders = computed(() => ({
@@ -115,13 +102,12 @@ let currentSpeed = 0
 const MAX_SPEED = 15 // 프레임당 회전 각도 (60fps 기준 초당 900도 = 2.5바퀴)
 
 function spinLoop() {
-  if (isStopping.value) return // 감속 모드가 되면 RAF 루프를 중지하고 CSS Transition에 위임
-  
+  if (isStopping.value) return
   if (currentSpeed < MAX_SPEED) {
-    currentSpeed += 0.5 // 서서히 가속
+    currentSpeed += 0.5
   }
-  
-  wheelRotation.value = (wheelRotation.value + currentSpeed) % 360
+  wheelRotation += currentSpeed
+  setWheelTransform(wheelRotation) // Vue 없이 직접 DOM 업데이트
   rafId = requestAnimationFrame(spinLoop)
 }
 
@@ -141,7 +127,6 @@ function startSpin() {
   isStopping.value = false
   currentSpeed = 0
 
-  // 1. API 호출을 미리 실행하여 프라미스를 보관합니다.
   apiPromise.value = fetch('/api/roulette', {
     method: 'POST',
     headers: authHeaders.value,
@@ -153,7 +138,6 @@ function startSpin() {
     return data
   })
 
-  // 2. 가속 및 등속 회전 루프 가동
   rafId = requestAnimationFrame(spinLoop)
 }
 
@@ -163,35 +147,29 @@ async function stopSpin() {
   cancelAnimationFrame(rafId)
 
   try {
-    // API 결과를 가져옵니다 (이미 완료되었거나 완료되는 즉시 해결됨)
     const data = await apiPromise.value
 
-    // 당첨 칸이 위쪽 포인터(0도)에 오도록 각도 계산
     const targetSlotCenter = data.rewardIndex * DEG_PER_SLOT + DEG_PER_SLOT / 2
     const targetWheelAngle = (360 - targetSlotCenter) % 360
-    
-    // 현재 휠의 각도 0~360 정규화
-    const currentAngle = wheelRotation.value % 360
-
-    // 현재 각도에서 목표 각도까지 도달하는 최단 시계방향 오프셋
+    const currentAngle = wheelRotation % 360
     const delta = (targetWheelAngle - currentAngle + 360) % 360
-
-    // 최소 2바퀴 추가 회전하며 목표 각도로 감속 정지
     const extraSpins = 2 * 360
-    const finalRotation = wheelRotation.value + delta + extraSpins
+    const finalRotation = wheelRotation + delta + extraSpins
+    wheelRotation = finalRotation
 
-    // transition에 의해 최종 정지 위치로 애니메이션 적용
-    wheelRotation.value = finalRotation
+    // CSS transition으로 감속 정지 (직접 DOM 적용)
+    setWheelTransform(finalRotation, 'transform 3s cubic-bezier(0.23, 1, 0.32, 1)')
 
     setTimeout(() => {
       isSpinning.value = false
       isStopping.value = false
+      setWheelTransform(finalRotation) // transition 제거
       resultText.value = data.reward.name
       resultColor.value = data.reward.color
       showResult.value = true
       points.value = data.newPoints
       fetchUser()
-    }, 3200) // 3초 트랜지션 + 0.2초 마진
+    }, 3200)
   } catch (err: any) {
     errorMsg.value = err.message ?? '서버 연결에 실패했습니다.'
     isSpinning.value = false
@@ -247,8 +225,15 @@ onMounted(fetchUser)
             </svg>
           </div>
           
-          <div class="wheel-container" :style="wheelStyle">
-            <svg :width="svgSize" :height="svgSize" :viewBox="`0 0 ${svgSize} ${svgSize}`">
+          <!-- 정적 링 (box-shadow만, 회전 없음) -->
+          <div class="wheel-ring">
+            <!-- 실제 회전: SVG만 GPU 레이어에서 회전 -->
+            <svg
+              ref="wheelRef"
+              class="wheel-svg"
+              :width="svgSize" :height="svgSize"
+              :viewBox="`0 0 ${svgSize} ${svgSize}`"
+            >
               <g v-for="(s, i) in slicePaths" :key="i">
                 <path :d="s.path" :fill="s.color" stroke="#FFFFFF" stroke-width="3" />
                 <text
@@ -618,7 +603,8 @@ onMounted(fetchUser)
 .pointer-pin svg {
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12));
 }
-.wheel-container {
+/* 정적 링: box-shadow만 담당, 절대 회전하지 않음 */
+.wheel-ring {
   border-radius: 50%;
   background: #FFFFFF;
   padding: 6px;
@@ -627,6 +613,15 @@ onMounted(fetchUser)
     0 0 0 6px #FFFFFF,
     0 0 0 9px var(--color-text-highlight),
     0 10px 36px rgba(95, 97, 255, 0.12);
+}
+
+/* 실제 회전 요소: box-shadow 없이 GPU 레이어 전용 */
+.wheel-svg {
+  display: block;
+  border-radius: 50%;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 /* 대기 상태의 Pulse 애니메이션 */
