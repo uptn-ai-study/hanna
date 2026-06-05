@@ -42,13 +42,12 @@ if (rewardCount.cnt === 0) {
     'INSERT INTO rewards (name, label, color, probability, weekly_limit, points_value) VALUES (?, ?, ?, ?, ?, ?)'
   );
   // 확률 합계 = 1.0
-  insertReward.run('꽝',         '꽝',           '#374151', 0.55, 9999, 0);
-  insertReward.run('포인트 +5',  '+5P',          '#6366f1', 0.20, 9999, 5);
-  insertReward.run('포인트 +10', '+10P',         '#8b5cf6', 0.12, 9999, 10);
-  insertReward.run('포인트 +20', '+20P',         '#a78bfa', 0.07, 9999, 20);
-  insertReward.run('편의점 커피', '☕ 커피',      '#f59e0b', 0.04, 5,    0);
-  insertReward.run('스타벅스 1잔','⭐ 스벅',     '#10b981', 0.015, 2,   0);
-  insertReward.run('치킨 기프티콘','🍗 치킨',   '#ef4444', 0.005, 1,    0);
+  insertReward.run('꽝', '꽝', '#374151', 0.55, 9999, 0);
+  insertReward.run('추파춥스', '추파춥스', '#6366f1', 0.20, 9999, 0);
+  insertReward.run('마이쭈', '마이쭈', '#8b5cf6', 0.19, 9999, 0);
+  insertReward.run('배스킨라빈스 싱글레귤러', '베라',      '#f59e0b', 0.04, 5,    0);
+  insertReward.run('스타벅스 1잔', '스벅', '#10b981', 0.015, 2, 0);
+  insertReward.run('치킨 기프티콘', '치킨', '#5F61FF', 0.005, 1, 0);
 }
 
 module.exports = db;

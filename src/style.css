@@ -2,8 +2,12 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  background: #FFFFFF;
+  background: #F5F6F8;
   color: #444444;
   font-family: 'SUIT', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
