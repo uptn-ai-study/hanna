@@ -199,11 +199,6 @@ async function stopSpin() {
   }
 }
 
-async function resetPoints() {
-  await fetch('/api/user/reset', { method: 'POST', headers: authHeaders.value })
-  await fetchUser()
-}
-
 function closeResult() {
   showResult.value = false
 }
