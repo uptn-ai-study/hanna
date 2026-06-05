@@ -233,8 +233,8 @@ onMounted(fetchUser)
       <div class="content-body">
         <!-- 히어로 타이틀 (사용자 디자인 복제) -->
         <div class="hero-section">
-          <p class="hero-subtitle editor-sub-1">돌리고 혜택을 모아보세요!</p>
-          <h2 class="hero-title editor-title-1 color-accent">100% 당첨 룰렛</h2>
+          <p class="hero-subtitle editor-sub-1">운명은 돌리는 자의 것</p>
+          <h2 class="hero-title editor-title-1 color-accent">오늘의 행운 룰렛</h2>
         </div>
 
         <!-- 룰렛 SVG 휠 -->
