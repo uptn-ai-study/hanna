@@ -1,0 +1,846 @@
+/* UPTNStation UI Kit Compliant Style Sheet */
+
+:root {
+  --primary: #5F46FF;
+  --primary-dark: #4F38D9;
+  --primary-light: #EEF0FF;
+  --primary-dim: rgba(99, 102, 241, 0.10);
+
+  --app-bg: #F4F3FF;
+  --card-bg: #FFFFFF;
+  --muted-bg: #F5F5F8;
+  --border: #E5E7EB;
+
+  --text-1: #111827;
+  /* 본문 주요 텍스트 */
+  --text-2: #6B7280;
+  /* 서브 텍스트 */
+  --text-3: #9CA3AF;
+  /* 캡션, 비활성 텍스트 */
+
+  --success: #10B981;
+  --error: #EF4444;
+}
+
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.3px;
+  /* Recommended for SUIT */
+}
+
+body {
+  background-color: var(--app-bg);
+  color: var(--text-1);
+  font-family: "SUIT Variable", SUIT, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Layout Frame (Max 420px Mobile Container) */
+.phone-container {
+  width: 420px;
+  max-width: 100%;
+  background: var(--card-bg);
+  padding-bottom: 0;
+  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.06);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Typography Classes */
+.display {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.title-1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.title-2 {
+  font-size: 22px;
+  line-height: 32px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.title-3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.title-4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.body-1 {
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #333333;
+}
+
+.body-2 {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-2);
+}
+
+.caption {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-3);
+}
+
+.link {
+  color: var(--primary);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* Buttons */
+.btn {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  transition: 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  font-size: 16px;
+  height: 56px;
+  border-radius: 12px;
+  width: 100%;
+}
+
+.btn-primary:active {
+  background: var(--primary-dark);
+}
+
+.btn-secondary {
+  background: var(--muted-bg);
+  color: var(--text-1);
+  font-size: 16px;
+  height: 56px;
+  border-radius: 12px;
+  flex: 1;
+}
+
+.btn-secondary-light {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 16px;
+  height: 56px;
+  border-radius: 12px;
+  font-weight: 700;
+  width: 100%;
+}
+
+.btn-secondary-light:active {
+  background: #e0e4ff;
+}
+
+.btn-tertiary-outline {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text-1);
+  font-size: 15px;
+  height: 48px;
+  border-radius: 12px;
+  font-weight: 700;
+  width: 100%;
+}
+
+.btn-tertiary-outline:active {
+  background: var(--muted-bg);
+}
+
+.btn-outline {
+  background: var(--muted-bg);
+  border: 1px solid var(--border);
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  height: 40px;
+  border-radius: 9999px;
+  padding: 0 20px;
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 15px;
+  font-weight: 500;
+  padding: 0 4px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.btn-disabled {
+  background: #E5E7EB;
+  color: #9CA3AF;
+  font-size: 16px;
+  height: 56px;
+  border-radius: 12px;
+  width: 100%;
+  cursor: not-allowed;
+}
+
+/* Input Fields */
+.input-container-large {
+  display: flex;
+  align-items: center;
+  position: relative;
+  /* 테두리(border) 완전 제거 */
+  border: none;
+  padding: 8px 0;
+  margin-bottom: 8px;
+  background: transparent;
+}
+
+.input-field-large {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-1);
+  border: none;
+  background: none;
+  outline: none;
+  width: 100%;
+  padding: 0 44px 0 0;
+  /* 우측 삭제 버튼을 고려한 우측 패딩 */
+  font-family: "SUIT Variable", SUIT, -apple-system, sans-serif;
+}
+
+/* Chrome, Safari, Edge, Opera number input spinner remove */
+.input-field-large::-webkit-outer-spin-button,
+.input-field-large::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox number input spinner remove */
+.input-field-large[type=number] {
+  -moz-appearance: textfield;
+}
+
+.input-clear-btn {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+}
+
+.input-clear-btn:active {
+  background: var(--text-3);
+  color: #fff;
+}
+
+.input-suffix-large {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-3);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.input-error-text {
+  color: var(--error);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.input-text-highlight {
+  color: var(--primary);
+}
+
+/* Quick Action Chips */
+.quick-chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+.quick-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  /* 피그마 고정 높이 40px */
+  width: 56px;
+  /* 짧은 칩 고정 너비 56px (+1, 최대 등) */
+  padding: 6px 16px;
+  /* 피그마 여백 준수 */
+  border-radius: 10px;
+  /* 피그마 곡률 10px */
+  background: #F5F5F5;
+  /* Gray150 */
+  color: #555555;
+  /* 피그마 버튼 텍스트 컬러 */
+  font-size: 14px;
+  /* 피그마 4_Body_14SB */
+  font-weight: 600;
+  /* SemiBold */
+  line-height: 22px;
+  /* Line height 22px */
+  letter-spacing: -0.3px;
+  /* Letter spacing -0.3px */
+  font-family: "SUIT Variable", SUIT, -apple-system, sans-serif;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  outline: none;
+}
+
+.quick-chip:active {
+  background: #E5E7EB;
+  transform: scale(0.97);
+}
+
+.quick-chip-wide {
+  width: auto;
+  /* 긴 칩 가변 너비 대응 */
+  min-width: 56px;
+}
+
+/* Tab Bar */
+.tab-bar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  /* 세로 중앙 정렬 */
+  height: 62px;
+  /* 피그마 고정 높이 62px */
+  padding: 0 32px;
+  /* 래플 화면처럼 넓은 좌우 패딩 적용 */
+  gap: 20px;
+  /* 탭 아이템 간격 20px */
+  background: var(--card-bg);
+  border-bottom: none;
+  /* 회색선 삭제 */
+}
+
+.tab-item {
+  flex: none;
+  /* 균등 너비 해제 */
+  height: 100%;
+  /* 탭바 전체 높이를 채워 밑줄이 바닥에 붙도록 함 */
+  display: flex;
+  align-items: center;
+  /* 세로 중앙 정렬 */
+  padding: 0;
+  /* 높이 고정으로 패딩 불필요 */
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  font-family: inherit;
+  letter-spacing: -0.3px;
+}
+
+.tab-item.active {
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.tab-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  /* 글자와의 간격 조정을 위해 바닥에서 띄움 */
+  left: 0;
+  /* 글자 너비와 100% 매칭 */
+  right: 0;
+  height: 3px;
+  /* 3px 두껍게 보정 */
+  background: var(--text-1);
+  border-radius: 2px;
+}
+
+/* Badge & Chip */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: inherit;
+  font-weight: 600;
+  border: none;
+  line-height: 1;
+}
+
+.badge-success {
+  background: var(--success);
+  color: #fff;
+  font-size: 11px;
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+
+.badge-primary {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 11px;
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+
+.badge-count {
+  background: var(--muted-bg);
+  color: var(--text-2);
+  font-size: 11px;
+  border-radius: 9999px;
+  padding: 2px 8px;
+}
+
+.badge-error {
+  background: #FEE2E2;
+  color: var(--error);
+  font-size: 11px;
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+
+.chip {
+  height: 34px;
+  border-radius: 9999px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--muted-bg);
+  color: var(--text-2);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.15s;
+}
+
+.chip.active {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+}
+
+.font-bold { font-weight: 700; }
+.font-medium { font-weight: 500; }
+.color-primary { color: var(--primary); }
+.color-text-1 { color: var(--text-1); }
+
+/* Cards & List Item */
+.card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 0; /* 모든 패딩 통일을 위해 내부 16px 패딩 제거 */
+  border: none;
+  /* 테두리(border)와 그림자 제거하여 배경과 혼연일체 되도록 함 */
+}
+
+.card-selected {
+  border: 2px solid var(--primary);
+  border-radius: 20px;
+  background: var(--card-bg);
+  padding: 16px;
+}
+
+/* Detail Card (Vertical Key-Value) */
+.detail-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.detail-label {
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.detail-value {
+  font-size: 15px;
+  color: var(--text-1);
+  font-weight: 500;
+  word-break: break-all;
+}
+
+/* Minimal Table (Styled to blend with card-bg) */
+.raffle-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  margin-top: 8px;
+}
+
+.raffle-table th {
+  background: var(--muted-bg);
+  padding: 10px 12px;
+  color: var(--text-2);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.raffle-table td {
+  padding: 12px;
+  color: var(--text-1);
+  font-weight: 600;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.raffle-table tr:last-child td {
+  border-bottom: none;
+}
+
+.raffle-table .date-col {
+  color: var(--text-2);
+  font-weight: 400;
+}
+
+/* Spec List (Minimal Statement/Bill Style) */
+.spec-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.spec-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.spec-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.spec-label {
+  font-size: 14px;
+  color: #444;
+  font-weight: 400;
+}
+
+.spec-value {
+  font-size: 14px;
+  color: #111111;
+  font-weight: 400;
+  text-align: right;
+}
+
+.badge-link {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+}
+
+
+/* ===== Step Wizard Indicator ===== */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px 12px;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.step-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.step-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  transition: background 0.25s ease, color 0.25s ease;
+  font-family: inherit;
+}
+
+.step-circle.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.step-circle.done {
+  background: var(--success);
+  color: #fff;
+}
+
+.step-circle.pending {
+  background: #F3F4F6;
+  color: var(--text-3);
+}
+
+.step-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-3);
+  white-space: nowrap;
+  transition: color 0.25s ease;
+}
+
+.step-label.active {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.step-label.done {
+  color: var(--success);
+}
+
+.step-connector {
+  width: 40px;
+  height: 2px;
+  background: #F3F4F6;
+  margin: 0 6px;
+  margin-bottom: 16px;
+  border-radius: 2px;
+  transition: background 0.25s ease;
+  flex-shrink: 0;
+}
+
+.step-connector.done {
+  background: var(--success);
+}
+
+/* Step Navigation Buttons */
+.step-nav {
+  display: flex;
+  gap: 10px;
+  padding: 16px 16px 20px;
+  background: var(--card-bg);
+  border-top: 1px solid var(--border);
+  position: sticky;
+  bottom: 0;
+}
+
+.step-nav .btn-primary {
+  flex: 1;
+}
+
+.step-nav .btn-secondary {
+  width: 80px;
+  flex: none;
+}
+
+/* Sticky Bottom Bar (Full-bleed Button) */
+.sticky-bottom-bar {
+  display: flex;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  padding: 12px 24px 24px;
+  box-sizing: border-box;
+  gap: 8px;
+  z-index: 10;
+  background: var(--card-bg);
+}
+
+.btn-flat {
+  flex: 1;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.btn-flat:disabled {
+  background: #E5E7EB;
+  color: #9CA3AF;
+  cursor: not-allowed;
+}
+
+.btn-flat-secondary {
+  background: #F5F5F8;
+  color: var(--text-1);
+}
+
+.btn-flat-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* ===== Notice Footer */
+.notice-footer {
+  background: var(--muted-bg);
+  padding: 24px 20px 48px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.notice-footer .footer-title {
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-1);
+  margin-bottom: 12px;
+}
+
+.notice-footer p {
+  font-family: inherit;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 20px;
+  margin-bottom: 8px;
+}
+
+.notice-footer p:last-child {
+  margin-bottom: 0;
+}
+
+/* App Header spec */
+.app-header {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  border-bottom: none;
+  /* 하단 회색 선 삭제 */
+  background: var(--card-bg);
+}
+
+.header-back {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text-1);
+}
+
+.header-icon {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+/* Modal Header (Back & Close Button) */
+.app-header-modal {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* 양끝 정렬 */
+  padding: 0 24px;
+  background: var(--card-bg);
+}
+
+.header-close-btn,
+.header-back-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--text-1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-icons {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-3);
+}
