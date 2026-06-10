@@ -1,0 +1,126 @@
+@import url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff');
+
+:root {
+  --font-retro: 'DungGeunMo', 'Courier New', monospace;
+  --bg-color: #f7f5ee; /* 밝고 따뜻한 크림/베이지 톤 */
+  --table-bg: #eddcb9; /* 샌드 브라운 파스텔 테이블 */
+  --neon-gold: #ffcc00;
+  --neon-red: #ff5e57;
+  --text-dark: #2c251e; /* 완전히 까맣지 않은 부드러운 다크 브라운 */
+  --text-muted: #8c7f72;
+  --border-color: #000000; /* 뚜렷하고 강렬한 카툰 아웃라인 */
+  --panel-bg: #ffffff;
+  
+  font-family: var(--font-retro);
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: var(--text-dark);
+  background-color: var(--bg-color);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@font-face {
+  font-family: 'DungGeunMo';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 30%, #fdfbf7 0%, #edeae0 100%);
+  overflow-x: hidden;
+}
+
+#app {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+/* Cartoon UI Box */
+.retro-box {
+  background: var(--panel-bg);
+  border: 3.5px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 6px 6px 0 var(--border-color);
+  position: relative;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+/* Cartoon Styled Button */
+.retro-btn {
+  font-family: var(--font-retro);
+  background: #f7e7d0;
+  color: var(--text-dark);
+  border: 3.5px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: transform 0.05s, box-shadow 0.05s;
+  outline: none;
+  box-shadow: 4px 4px 0 var(--border-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.retro-btn:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--border-color);
+}
+
+.retro-btn:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--border-color);
+}
+
+.retro-btn:disabled {
+  background: #e2ded8;
+  color: #a5a098;
+  border-color: #a5a098;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.retro-btn.gold {
+  background: #ffcc00;
+}
+
+.retro-btn.red {
+  background: #ff7675;
+  color: #fff;
+}
+
+/* Utility Animations */
+@keyframes cute-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.bounce-animation {
+  animation: cute-bounce 1.5s infinite ease-in-out;
+}
