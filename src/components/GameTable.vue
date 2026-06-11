@@ -89,7 +89,8 @@
         <button class="retro-btn gold action-btn start-btn" @click="$emit('start-game')">시작!</button>
       </div>
       <div v-if="gameState === 'result'" class="action-container">
-        <button class="retro-btn gold action-btn next-btn" @click="$emit('next-round')">다음 스테이지로 ➡️</button>
+        <button v-if="selectedIndex === winningIndex" class="retro-btn gold action-btn next-btn" @click="$emit('next-round')">다음 스테이지로 ➡️</button>
+        <button v-else class="retro-btn action-btn next-btn" style="background: #ff7675;" @click="$emit('next-round')">다시 도전하기!</button>
       </div>
     </div>
   </div>
@@ -439,11 +440,13 @@ function onCupClick(index: number) {
 }
 
 .ball-character.found {
+  opacity: 1;
   animation: shine-success-bounce 1.5s infinite alternate;
 }
 
 .ball-character.missed {
   opacity: 0.9;
+  transform: translateY(0px) scale(1);
 }
 
 /* 컵 선택 물음표 지시표 */

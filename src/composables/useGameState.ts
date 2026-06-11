@@ -111,7 +111,7 @@ export function useGameState() {
       if (rankings.value.length > 10) {
         rankings.value = rankings.value.slice(0, 10)
       }
-      gameState.value = 'gameover'
+      // 게임오버 처리는 result 화면 이후로 지연
     }
     
     gameState.value = 'result'
@@ -120,6 +120,7 @@ export function useGameState() {
   const nextRound = () => {
     if (gameState.value !== 'result') return
     
+    // 틀렸을 때도 팝업 없이 같은 스테이지 재도전
     // Reset temporary states
     selectedIndex.value = null
     gameState.value = 'betting'
