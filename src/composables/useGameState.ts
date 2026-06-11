@@ -10,7 +10,8 @@ export interface RankingRecord {
 // Local Storage Keys
 const STORAGE_KEYS = {
   HIGH_SCORE: 'yabawi_high_score',
-  RANKING: 'yabawi_ranking'
+  RANKING: 'yabawi_ranking',
+  PLAYER_NAME: 'yabawi_player_name'
 }
 
 export function useGameState() {
@@ -35,6 +36,7 @@ export function useGameState() {
   }
 
   // Reactive State
+  const playerName = ref<string>(localStorage.getItem(STORAGE_KEYS.PLAYER_NAME) || '')
   const highScore = ref<number>(loadStored(STORAGE_KEYS.HIGH_SCORE, 1))
   const rankings = ref<RankingRecord[]>(loadRanking())
   const stage = ref<number>(1)
@@ -43,6 +45,9 @@ export function useGameState() {
   
   const winningIndex = ref<number>(0)
   const selectedIndex = ref<number | null>(null)
+
+  // Watchers to persist state
+  watch(playerName, (newVal) => localStorage.setItem(STORAGE_KEYS.PLAYER_NAME, newVal))
 
   // Watchers to persist state
   watch(highScore, (newVal) => localStorage.setItem(STORAGE_KEYS.HIGH_SCORE, newVal.toString()))
@@ -106,7 +111,7 @@ export function useGameState() {
       }
     } else {
       // 틀렸을 때 -> 게임 오버
-      rankings.value.push({ id: '나의햄스터', stage: stage.value })
+      rankings.value.push({ id: playerName.value || '나의햄스터', stage: stage.value })
       rankings.value.sort((a, b) => b.stage - a.stage)
       if (rankings.value.length > 10) {
         rankings.value = rankings.value.slice(0, 10)
@@ -132,7 +137,12 @@ export function useGameState() {
     selectedIndex.value = null
   }
 
+  const setPlayerName = (name: string) => {
+    playerName.value = name
+  }
+
   return {
+    playerName,
     highScore,
     rankings,
     stage,
@@ -144,6 +154,7 @@ export function useGameState() {
     shuffleSpeed,
     shuffleCount,
     setBetAmount,
+    setPlayerName,
     startGame,
     startShuffling,
     finishShuffling,

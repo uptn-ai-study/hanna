@@ -54,16 +54,40 @@
         </div>
       </div>
     </div>
+    <!-- 닉네임 설정 모달 -->
+    <div v-if="showNicknameModal" class="nickname-modal-overlay">
+      <div class="nickname-container retro-box">
+        <h2 class="nickname-title">🐹 닉네임을 정해주세요!</h2>
+        <p class="nickname-desc">새로운 햄스터 친구, 반가워요!</p>
+        <div class="nickname-input-group">
+          <input 
+            type="text" 
+            v-model="tempNickname" 
+            class="nickname-input" 
+            maxlength="10"
+            placeholder="닉네임 입력"
+            @keyup.enter="confirmNickname"
+          />
+        </div>
+        <div class="nickname-actions">
+          <button class="retro-btn gold confirm-btn" @click="confirmNickname">
+            ✨ 이 이름으로 시작하기
+          </button>
+        </div>
+      </div>
+    </div>
   </main>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useGameState } from './composables/useGameState'
 import UIOverlay from './components/UIOverlay.vue'
 import GameTable from './components/GameTable.vue'
 import RankingBoard from './components/RankingBoard.vue'
 
 const {
+  playerName,
   highScore,
   rankings,
   stage,
@@ -75,6 +99,7 @@ const {
   shuffleSpeed,
   shuffleCount,
   setBetAmount,
+  setPlayerName,
   startGame,
   startShuffling,
   finishShuffling,
@@ -82,6 +107,28 @@ const {
   nextRound,
   resetGame
 } = useGameState()
+
+const showNicknameModal = ref(false)
+const tempNickname = ref('')
+
+const randomNicknames = [
+  '날쌘다람쥐', '착한햄스터', '바쁜청설모', '용감한토끼', '배고픈불곰',
+  '귀여운수달', '멋쟁이사자', '행복한쿼카', '잽싼고양이', '졸린강아지'
+]
+
+onMounted(() => {
+  if (!playerName.value) {
+    tempNickname.value = randomNicknames[Math.floor(Math.random() * randomNicknames.length)]
+    showNicknameModal.value = true
+  }
+})
+
+const confirmNickname = () => {
+  if (tempNickname.value.trim().length > 0) {
+    setPlayerName(tempNickname.value.trim())
+    showNicknameModal.value = false
+  }
+}
 </script>
 
 
@@ -178,5 +225,73 @@ const {
 @keyframes gameover-bounce {
   0% { transform: scale(0.8); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+/* 닉네임 설정 모달 */
+.nickname-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(8px);
+}
+
+.nickname-container {
+  width: 90%;
+  max-width: 400px;
+  background: #ffffff;
+  text-align: center;
+  padding: 30px 20px;
+  animation: gameover-bounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nickname-title {
+  font-size: 1.6rem;
+  color: #ff9f43;
+  margin-bottom: 10px;
+}
+
+.nickname-desc {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 25px;
+}
+
+.nickname-input-group {
+  margin-bottom: 25px;
+}
+
+.nickname-input {
+  width: 80%;
+  padding: 12px 15px;
+  font-size: 1.2rem;
+  text-align: center;
+  border: 3px solid #f1c40f;
+  border-radius: 12px;
+  outline: none;
+  font-family: inherit;
+  color: var(--text-dark);
+  font-weight: bold;
+  transition: all 0.2s ease;
+  background: #fff9db;
+}
+
+.nickname-input:focus {
+  border-color: #f39c12;
+  box-shadow: 0 0 0 4px rgba(241, 196, 15, 0.3);
+}
+
+.nickname-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.confirm-btn {
+  font-size: 1.15rem;
+  padding: 12px 24px;
+  width: 80%;
 }
 </style>
