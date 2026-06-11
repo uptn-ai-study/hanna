@@ -72,11 +72,6 @@
               <path d="M 7 105 Q 50 115 93 105 L 91 113 Q 50 123 9 113 Z" fill="#ffffff" stroke="#000000" stroke-width="4.5" stroke-linejoin="round" />
             </svg>
             
-            <!-- 컵 번호 오버레이 (게임 시인성을 극대화) -->
-            <div class="cup-badge">
-              <span class="cup-number">{{ cup.number }}</span>
-            </div>
-            
             <!-- 컵 그림자 -->
             <div class="cup-shadow" :class="{ 'faded': isCupLifted(index) }"></div>
           </div>
@@ -90,6 +85,12 @@
     <!-- 진행 상황 안내 배너 (귀여운 카툰 톤) -->
     <div class="status-banner">
       <p class="status-text">{{ statusMessage }}</p>
+      <div v-if="gameState === 'betting'" class="action-container">
+        <button class="retro-btn gold action-btn start-btn" @click="$emit('start-game')">시작!</button>
+      </div>
+      <div v-if="gameState === 'result'" class="action-container">
+        <button class="retro-btn gold action-btn next-btn" @click="$emit('next-round')">다음 스테이지로 ➡️</button>
+      </div>
     </div>
   </div>
 </template>
@@ -117,6 +118,8 @@ const emit = defineEmits<{
   (e: 'start-shuffling'): void;
   (e: 'finish-shuffling', finalWinningIndex: number): void;
   (e: 'select-cup', index: number): void;
+  (e: 'start-game'): void;
+  (e: 'next-round'): void;
 }>()
 
 // 컵 리스트 상태
@@ -141,9 +144,9 @@ const transitionSpeedMs = computed(() => `${props.shuffleSpeed}ms`)
 const statusMessage = computed(() => {
   switch (props.gameState) {
     case 'betting':
-      return '씨앗을 걸고 [시작]을 눌러 귀여운 햄스터를 숨겨보세요! 🐹'
+      return '[시작!]을 눌러 귀여운 햄스터를 숨겨보세요! 🐹'
     case 'showing_ball':
-      return '햄스터가 들어간 컵 번호를 눈을 동그랗게 뜨고 기억하세요!'
+      return '햄스터가 들어간 컵을 눈을 동그랗게 뜨고 잘 지켜보세요!'
     case 'shuffling':
       return '컵들이 섞이고 있어요! 햄스터가 어딨을까요? 👀'
     case 'picking':
@@ -155,7 +158,7 @@ const statusMessage = computed(() => {
         return '앗, 빈 컵이네요! 햄스터는 다른 곳에 있어요 😢'
       }
     case 'gameover':
-      return '씨앗이 전부 떨어졌어요! 광고를 보고 충전해 보아요.'
+      return 'UP이 전부 떨어졌어요! 광고를 보고 충전해 보아요.'
     default:
       return ''
   }
@@ -381,29 +384,6 @@ function onCupClick(index: number) {
   filter: drop-shadow(0px 3px 0px rgba(0, 0, 0, 0.15));
 }
 
-/* 컵 번호 표기 배지 (가운데 귀여운 도트 형태로 배치) */
-.cup-badge {
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  border: 3px solid #000;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 2px 2px 0 #000;
-  pointer-events: none;
-}
-
-.cup-number {
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #000;
-}
 
 /* 컵 그림자 */
 .cup-shadow {
@@ -511,6 +491,23 @@ function onCupClick(index: number) {
   color: var(--text-dark);
   font-weight: bold;
   letter-spacing: 1px;
+}
+
+.action-container {
+  margin-top: 15px;
+}
+
+.action-btn {
+  font-size: 1.25rem;
+  min-width: 160px;
+}
+
+.start-btn {
+  background: #ffa502;
+}
+
+.next-btn {
+  background: #2ed573;
 }
 
 /* 키프레임 애니메이션 */

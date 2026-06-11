@@ -1,6 +1,6 @@
 <template>
   <div class="ui-overlay-container">
-    <!-- 상단 HUD 바 (스테이지, 최고기록, 씨앗 개수, 아이템) -->
+    <!-- 상단 HUD 바 (스테이지, 최고기록, UP 개수, 아이템) -->
     <div class="hud-bar retro-box">
       <div class="hud-item stage-info">
         <span class="hud-label">STAGE</span>
@@ -11,153 +11,28 @@
         <span class="hud-label">BEST STAGE</span>
         <span class="hud-value">{{ highScore }}</span>
       </div>
-      
-      <div class="hud-item points-info">
-        <span class="hud-label">SEED</span>
-        <span class="hud-value highlight-seed">🌻 {{ points.toLocaleString() }}</span>
-      </div>
-
-      <div class="hud-item item-info">
-        <span class="hud-label">SLOW-MO</span>
-        <div class="item-badge-container">
-          <span class="item-icon">⏳</span>
-          <span class="hud-value">{{ slowMotionItems }}</span>
-        </div>
-      </div>
     </div>
 
-    <!-- 하단 컨트롤 패널 (베팅 설정 및 액션 실행) -->
-    <div class="control-panel retro-box">
-      <!-- 베팅 단계 조작 UI -->
-      <div v-if="gameState === 'betting'" class="betting-controls">
-        <div class="bet-input-section">
-          <label class="bet-label">나눌 씨앗 개수 설정</label>
-          <div class="bet-display">
-            <span class="bet-value">🌻 {{ betAmount.toLocaleString() }} 개</span>
-            <span class="bet-ratio">(성공하면 {{ cupCount }}배로 돌려받아요!)</span>
-          </div>
-          <div class="bet-buttons">
-            <button class="retro-btn" @click="adjustBet(100)">+100</button>
-            <button class="retro-btn" @click="adjustBet(500)">+500</button>
-            <button class="retro-btn gold" @click="adjustBet(-1)">모두 걸기</button>
-            <button class="retro-btn red" @click="resetBet">다시 설정</button>
-          </div>
-        </div>
-
-        <div class="action-section">
-          <!-- 슬로우 모션 사용 버튼 -->
-          <button 
-            class="retro-btn item-btn"
-            :class="{ 'active': isSlowMotionActive }"
-            :disabled="slowMotionItems <= 0 || isSlowMotionActive"
-            @click="useSlowMotion"
-          >
-            ⏳ 슬로우 모션 {{ isSlowMotionActive ? '적용됨' : '사용' }}
-          </button>
-
-          <!-- 게임 시작 버튼 -->
-          <button class="retro-btn gold start-btn" @click="startGame">
-            준비 완료! 🐹
-          </button>
-        </div>
-      </div>
-
-      <!-- 게임 실행 상태 중의 UI -->
-      <div v-else class="gameplay-actions">
-        <div class="current-bet-info">
-          <span>나눈 씨앗: <strong>🌻 {{ betAmount }} 개</strong></span>
-          <span v-if="isSlowMotionActive" class="slowmo-tag">⚡ 햄스터가 느려졌어요!</span>
-        </div>
-
-        <div v-if="gameState === 'picking'" class="picking-tip">
-          햄스터가 들어간 컵을 가볍게 콕 눌러보세요!
-        </div>
-
-        <!-- 결과 확인 단계에서의 다음 스테이지 진행 버튼 -->
-        <div v-if="gameState === 'result'" class="result-actions">
-          <button class="retro-btn gold next-btn" @click="nextRound">
-            {{ isNextRoundGameOver ? '결과 확인...' : '다음 스테이지로 ➡️' }}
-          </button>
-        </div>
-      </div>
-
-      <!-- 하단 공통 유틸리티 버튼 -->
-      <div class="utility-buttons">
-        <button 
-          class="retro-btn shop-trigger-btn"
-          :disabled="gameState !== 'betting'"
-          @click="$emit('open-shop')"
-        >
-          🛒 다람쥐의 씨앗 상점
-        </button>
-        <button 
-          class="retro-btn reset-trigger-btn red"
-          @click="onResetClick"
-        >
-          🔄 처음부터 다시
-        </button>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { GameState } from '../composables/useGameState'
 
 const props = defineProps<{
-  points: number;
   highScore: number;
-  slowMotionItems: number;
   stage: number;
   betAmount: number;
   gameState: GameState;
   cupCount: number;
-  isSlowMotionActive: boolean;
 }>()
 
 const emit = defineEmits<{
   (e: 'set-bet', amount: number): void;
   (e: 'start-game'): void;
-  (e: 'use-slowmo'): void;
   (e: 'next-round'): void;
-  (e: 'open-shop'): void;
   (e: 'reset-game'): void;
 }>()
-
-const isNextRoundGameOver = computed(() => {
-  return props.points <= 0
-})
-
-function adjustBet(val: number) {
-  if (val === -1) {
-    emit('set-bet', -1)
-  } else {
-    emit('set-bet', props.betAmount + val)
-  }
-}
-
-function resetBet() {
-  emit('set-bet', 100)
-}
-
-function startGame() {
-  emit('start-game')
-}
-
-function useSlowMotion() {
-  emit('use-slowmo')
-}
-
-function nextRound() {
-  emit('next-round')
-}
-
-function onResetClick() {
-  if (confirm('모든 씨앗과 최고 기록이 초기화됩니다. 정말로 초기화할까요?')) {
-    emit('reset-game')
-  }
-}
 </script>
 
 <style scoped>

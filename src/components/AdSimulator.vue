@@ -2,7 +2,7 @@
   <div class="ad-modal-overlay">
     <div class="ad-container retro-box">
       <div class="ad-header">
-        <span class="ad-tag">🐿️ 유기농 씨앗 후원 광고</span>
+        <span class="ad-tag">🐿️ 유기농 UP 후원 광고</span>
         <div class="countdown-badge" v-if="timeLeft > 0">
           ⏳ {{ timeLeft }}초 후 건너뛰기 가능
         </div>
@@ -26,7 +26,7 @@
       </div>
 
       <div class="ad-footer">
-        <p>시청 완료 시 <strong>🌻 씨앗 500개</strong> 및 <strong>하트 💖</strong>가 충전됩니다!</p>
+        <p>시청 완료 시 <strong>⬆️ UP 500개</strong> 및 <strong>하트 💖</strong>가 충전됩니다!</p>
       </div>
     </div>
   </div>
@@ -48,12 +48,12 @@ let timer: number | null = null
 const ads = [
   {
     title: '야생 왕도토리 급처분! 🐿️',
-    desc: '옆 동네 다람쥐 창고에서 몰래 수확한 최고급 밤도토리! 단돈 씨앗 50개 파격 한정 할인!',
+    desc: '옆 동네 다람쥐 창고에서 몰래 수확한 최고급 밤도토리! 단돈 UP 50개 파격 한정 할인!',
     actionText: '다람쥐 우체국 택배 즉시 발송',
     icon: '🌰'
   },
   {
-    title: '볼이 빵빵! 프리미엄 씨앗 믹스 🌻',
+    title: '볼이 빵빵! 프리미엄 UP 믹스 ⬆️',
     desc: '볼에 10개 이상 넣어도 끄떡없는 고소함! 유기농 무농약 햇해바라기씨 대량 입고 완료!',
     actionText: '무료 샘플 신청하기',
     icon: '🌾'

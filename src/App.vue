@@ -8,19 +8,14 @@
 
     <!-- 게임 레이아웃 (HUD + 컨트롤러) -->
     <UIOverlay
-      :points="points"
       :high-score="highScore"
-      :slow-motion-items="slowMotionItems"
       :stage="stage"
       :bet-amount="betAmount"
       :game-state="gameState"
       :cup-count="cupCount"
-      :is-slow-motion-active="isSlowMotionActive"
       @set-bet="setBetAmount"
       @start-game="startGame"
-      @use-slowmo="useSlowMotion"
       @next-round="nextRound"
-      @open-shop="showShopModal = true"
       @reset-game="resetGame"
     />
 
@@ -35,39 +30,26 @@
       @start-shuffling="startShuffling"
       @finish-shuffling="finishShuffling"
       @select-cup="selectCup"
+      @start-game="startGame"
+      @next-round="nextRound"
     />
 
-    <!-- 아이템 상점 모달 -->
-    <ShopModal
-      v-if="showShopModal"
-      :points="points"
-      :slow-motion-items="slowMotionItems"
-      @close="showShopModal = false"
-      @buy-item="buySlowMotion"
-      @trigger-ad="onShopTriggerAd"
-    />
+    <!-- 하단 랭킹 보드 -->
+    <RankingBoard :rankings="rankings" />
 
-    <!-- 가상 광고 시뮬레이터 모달 -->
-    <AdSimulator
-      v-if="showAdModal"
-      @close="showAdModal = false"
-      @reward="watchAdReward"
-    />
+
 
     <!-- 배고픔(게임오버) 모달 -->
     <div v-if="gameState === 'gameover'" class="gameover-modal-overlay">
       <div class="gameover-container retro-box">
-        <h2 class="gameover-title">😭 배고픈 햄스터!</h2>
+        <h2 class="gameover-title">😭 아쉽게도 틀렸어요!</h2>
         <p class="gameover-desc">
-          나눠줄 씨앗이 전부 떨어져서 햄스터들이 슬퍼하고 있어요...<br>
+          햄스터는 다른 컵에 숨어 있었네요...<br>
           <span class="final-score">최종 도달 스테이지: <strong class="highlight-gold">{{ stage }} 스테이지</strong></span>
         </p>
         <div class="gameover-actions">
-          <button class="retro-btn gold ad-resurrect-btn" @click="showAdModal = true">
-            📺 광고 보고 무료 씨앗 받기 (+500개)
-          </button>
-          <button class="retro-btn red reset-resurrect-btn" @click="resetGame">
-            🔄 씨앗 새로 받기 (1,000개)
+          <button class="retro-btn gold next-btn" @click="resetGame">
+            🔄 다시 도전하기
           </button>
         </div>
       </div>
@@ -79,21 +61,16 @@
 import { useGameState } from './composables/useGameState'
 import UIOverlay from './components/UIOverlay.vue'
 import GameTable from './components/GameTable.vue'
-import ShopModal from './components/ShopModal.vue'
-import AdSimulator from './components/AdSimulator.vue'
+import RankingBoard from './components/RankingBoard.vue'
 
 const {
-  points,
   highScore,
-  slowMotionItems,
+  rankings,
   stage,
   betAmount,
   gameState,
   winningIndex,
   selectedIndex,
-  isSlowMotionActive,
-  showAdModal,
-  showShopModal,
   cupCount,
   shuffleSpeed,
   shuffleCount,
@@ -103,18 +80,11 @@ const {
   finishShuffling,
   selectCup,
   nextRound,
-  useSlowMotion,
-  buySlowMotion,
-  watchAdReward,
   resetGame
 } = useGameState()
-
-// 상점에서 광고 호출 시 상점을 닫고 광고를 켬
-function onShopTriggerAd() {
-  showShopModal.value = false
-  showAdModal.value = true
-}
 </script>
+
+
 
 <style scoped>
 .game-container {
