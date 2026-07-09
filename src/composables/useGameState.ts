@@ -1,57 +1,73 @@
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 
-export type GameState = 'betting' | 'showing_ball' | 'shuffling' | 'picking' | 'result' | 'gameover'
+export type GameState = 'betting' | 'showing_ball' | 'shuffling' | 'picking' | 'result'
 
 export interface RankingRecord {
   id: string;
   stage: number;
 }
 
-// Local Storage Keys
-const STORAGE_KEYS = {
-  HIGH_SCORE: 'yabawi_high_score',
-  RANKING: 'yabawi_ranking',
-  PLAYER_NAME: 'yabawi_player_name'
-}
-
 export function useGameState() {
-  // Persistence Loading
-  const loadStored = (key: string, defaultValue: number): number => {
-    const val = localStorage.getItem(key)
-    return val !== null ? parseInt(val, 10) : defaultValue
+  // 로컬 스토리지 키
+  const STORAGE_KEYS = {
+    PLAYER_NAME: 'yabawi_player_name',
+    HIGH_SCORE: 'yabawi_high_score'
   }
 
-  const loadRanking = (): RankingRecord[] => {
-    const val = localStorage.getItem(STORAGE_KEYS.RANKING)
-    if (val) {
-      return JSON.parse(val)
-    }
-    return [
-      { id: '다람쥐대장', stage: 25 },
-      { id: '도토리도둑', stage: 18 },
-      { id: '햄스터박사', stage: 14 },
-      { id: '씨앗수집가', stage: 10 },
-      { id: '빠른쳇바퀴', stage: 7 }
-    ]
-  }
-
-  // Reactive State
+  // 로컬 스토리지 복원 및 반응형 상태 정의
   const playerName = ref<string>(localStorage.getItem(STORAGE_KEYS.PLAYER_NAME) || '')
-  const highScore = ref<number>(loadStored(STORAGE_KEYS.HIGH_SCORE, 1))
-  const rankings = ref<RankingRecord[]>(loadRanking())
+  const highScore = ref<number>(
+    parseInt(localStorage.getItem(STORAGE_KEYS.HIGH_SCORE) || '1', 10)
+  )
+  const rankings = ref<RankingRecord[]>([
+    { id: '다람쥐대장', stage: 25 },
+    { id: '도토리도둑', stage: 18 },
+    { id: '햄스터박사', stage: 14 },
+    { id: '씨앗수집가', stage: 10 },
+    { id: '빠른쳇바퀴', stage: 7 }
+  ])
+  
   const stage = ref<number>(1)
-  const betAmount = ref<number>(100) // unused, can be removed but keeping structure
+  const betAmount = ref<number>(100) // unused, structure kept
   const gameState = ref<GameState>('betting')
   
   const winningIndex = ref<number>(0)
   const selectedIndex = ref<number | null>(null)
 
-  // Watchers to persist state
-  watch(playerName, (newVal) => localStorage.setItem(STORAGE_KEYS.PLAYER_NAME, newVal))
+  // 랭킹 조회 API 호출
+  const fetchRankings = async () => {
+    try {
+      const response = await fetch('/api/rankings')
+      if (response.ok) {
+        const data = await response.json()
+        rankings.value = data
+      }
+    } catch (error) {
+      console.error('Failed to fetch rankings:', error)
+    }
+  }
 
-  // Watchers to persist state
-  watch(highScore, (newVal) => localStorage.setItem(STORAGE_KEYS.HIGH_SCORE, newVal.toString()))
-  watch(rankings, (newVal) => localStorage.setItem(STORAGE_KEYS.RANKING, JSON.stringify(newVal)), { deep: true })
+  // 랭킹 등록 API 호출
+  const submitScore = async (name: string, score: number) => {
+    if (!name) return
+    try {
+      const response = await fetch('/api/rankings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: name, stage: score })
+      })
+      if (response.ok) {
+        await fetchRankings()
+      }
+    } catch (error) {
+      console.error('Failed to submit score:', error)
+    }
+  }
+
+  // 초기 로딩 시 랭킹 조회
+  fetchRankings()
 
   // Computed Values
   const cupCount = computed(() => {
@@ -66,7 +82,6 @@ export function useGameState() {
   })
 
   const shuffleCount = computed(() => {
-    // Stage increases -> more shuffles
     return Math.min(18, 5 + stage.value)
   })
 
@@ -78,11 +93,8 @@ export function useGameState() {
 
   const startGame = () => {
     if (gameState.value !== 'betting') return
-    
-    // Choose winning cup randomly
     winningIndex.value = Math.floor(Math.random() * cupCount.value)
     selectedIndex.value = null
-    
     gameState.value = 'showing_ball'
   }
 
@@ -108,15 +120,28 @@ export function useGameState() {
       stage.value++
       if (stage.value > highScore.value) {
         highScore.value = stage.value
+        localStorage.setItem(STORAGE_KEYS.HIGH_SCORE, stage.value.toString())
       }
     } else {
-      // 틀렸을 때 -> 게임 오버
-      rankings.value.push({ id: playerName.value || '나의햄스터', stage: stage.value })
+      // 틀렸을 때 -> 로컬 즉시 업데이트 & 서버 비동기 등록
+      const scoreName = playerName.value || '나의햄스터'
+      
+      // 로컬 화면에 우선 반영 (낙관적 락/피드백)
+      const existingIdx = rankings.value.findIndex(r => r.id === scoreName)
+      if (existingIdx !== -1) {
+        if (stage.value > rankings.value[existingIdx].stage) {
+          rankings.value[existingIdx].stage = stage.value
+        }
+      } else {
+        rankings.value.push({ id: scoreName, stage: stage.value })
+      }
       rankings.value.sort((a, b) => b.stage - a.stage)
       if (rankings.value.length > 10) {
         rankings.value = rankings.value.slice(0, 10)
       }
-      // 게임오버 처리는 result 화면 이후로 지연
+
+      // 서버 전송
+      submitScore(scoreName, stage.value)
     }
     
     gameState.value = 'result'
@@ -124,11 +149,15 @@ export function useGameState() {
 
   const nextRound = () => {
     if (gameState.value !== 'result') return
-    
-    // 틀렸을 때도 팝업 없이 같은 스테이지 재도전
-    // Reset temporary states
-    selectedIndex.value = null
-    gameState.value = 'betting'
+
+    // 틀렸을 때 -> 바로 시작 화면으로 리셋
+    if (selectedIndex.value !== winningIndex.value) {
+      resetGame()
+    } else {
+      // 맞췄을 때 -> 다음 라운드 진행
+      selectedIndex.value = null
+      gameState.value = 'betting'
+    }
   }
 
   const resetGame = () => {
@@ -139,6 +168,7 @@ export function useGameState() {
 
   const setPlayerName = (name: string) => {
     playerName.value = name
+    localStorage.setItem(STORAGE_KEYS.PLAYER_NAME, name)
   }
 
   return {

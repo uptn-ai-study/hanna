@@ -1,0 +1,1910 @@
+/* ==========================================================================
+   Coffee Credential Simulator - Design System & Base Style
+   ========================================================================== */
+
+:root {
+  /* 색상 토큰 */
+  --bg-main: #181514;
+  --bg-gradient-top: #2c2523;
+  
+  /* 모카 네트워크 브랜드 컬러 개편 */
+  --moca-charcoal: #4E3629;
+  --moca-brown: #4E3629;
+  --moca-light-brown: #8D6E63;
+  --moca-bg: #F5EBD9;
+  --moca-card-bg: #FFFFFF;
+  --moca-text-primary: #4E3629;
+  --moca-text-secondary: #7D6B62;
+  --moca-border: #E6DCD2;
+  --moca-primary-color: #8D6E63;
+
+  /* Air SDK 다크 컬러 */
+  --air-bg: #0E0E10;
+  --air-card: #18181C;
+  --air-cyan: #00F0FF;
+  --air-text: #FFFFFF;
+  --air-text-muted: #9E9EAF;
+
+  /* 컴포즈 커피 브랜드 컬러 */
+  --compose-yellow: #FFE300;
+  --compose-yellow-hover: #E5CC00;
+  --compose-dark: #1A1A1A;
+  --compose-text: #FFFFFF;
+  --compose-border: #333333;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  background: radial-gradient(circle at top, var(--bg-gradient-top) 0%, var(--bg-main) 100%);
+  color: #FFFFFF;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  padding: 20px;
+}
+
+/* 시뮬레이터 컨테이너 */
+.simulator-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 450px;
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* 폰 디바이스 목업 (아이폰 15 Pro 스타일) */
+.iphone-device {
+  position: relative;
+  width: 380px;
+  height: 790px;
+  background: #000000;
+  border-radius: 52px;
+  border: 13px solid #2d2a29; /* 티타늄 베젤 */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7),
+              0 0 0 4px #1c1a19,
+              inset 0 0 3px 2px rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 다이내믹 아일랜드 */
+.iphone-device::before {
+  content: '';
+  position: absolute;
+  top: 13px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 28px;
+  background: #000000;
+  border-radius: 20px;
+  z-index: 100;
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.2);
+}
+
+/* 물리 버튼 모사 */
+.physical-button {
+  position: absolute;
+  background: #252322;
+  border-radius: 2px;
+  z-index: 10;
+}
+.side-left-top {
+  top: 130px;
+  left: -16px;
+  width: 3px;
+  height: 32px;
+  box-shadow: -1px 0 2px rgba(0, 0, 0, 0.5);
+}
+.side-left-bottom {
+  top: 178px;
+  left: -16px;
+  width: 3px;
+  height: 60px;
+}
+.side-right {
+  top: 178px;
+  right: -16px;
+  width: 3px;
+  height: 60px;
+}
+
+/* 상단 상태 바 (Status Bar) */
+.status-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  padding: 13px 32px 0 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 90;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  pointer-events: none;
+  font-family: 'Outfit', sans-serif;
+  color: #000000; /* 기본 모카 테마 */
+  transition: color 0.3s ease;
+}
+
+/* 다크 테마 시 상태바 색상 변경 */
+.status-bar.dark-mode {
+  color: #FFFFFF;
+}
+
+.status-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-signal {
+  width: 14px;
+  height: 14px;
+}
+
+.icon-wifi {
+  width: 15px;
+  height: 15px;
+}
+
+.battery-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.battery-percent {
+  font-size: 10px;
+}
+
+.icon-battery {
+  width: 20px;
+  height: 11px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  position: relative;
+  padding: 1px;
+}
+
+.icon-battery::before {
+  content: '';
+  display: block;
+  height: 100%;
+  width: 85%;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+.icon-battery::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: 3px;
+  width: 2px;
+  height: 3px;
+  background: currentColor;
+  border-radius: 0 1px 1px 0;
+}
+
+/* 화면 내부 뷰포트 */
+.screen-content {
+  width: 100%;
+  height: 100%;
+  background: var(--moca-bg);
+  border-radius: 40px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 스크롤바 숨기기 */
+.screen-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* 하단 홈 인디케이터 */
+.home-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 5px;
+  background: #000000; /* 기본 라이트 테마 */
+  border-radius: 10px;
+  z-index: 100;
+  transition: background-color 0.3s ease;
+}
+
+.home-indicator.dark-mode {
+  background: #FFFFFF;
+}
+
+/* 컨트롤 패널 */
+.control-panel {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-reset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  padding: 12px 24px;
+  color: #FFFFFF;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-reset:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.btn-reset:active {
+  transform: translateY(0);
+}
+
+.icon-reset {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.5s ease;
+}
+
+.btn-reset:hover .icon-reset {
+  transform: rotate(-180deg);
+}
+
+/* 키프레임 애니메이션 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+
+/* ==========================================================================
+   Moca Event Page Styling
+   ========================================================================== */
+
+.moca-header {
+  height: 48px;
+  background: var(--moca-bg);
+  border-bottom: 1px solid var(--moca-border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.moca-header-title {
+  color: var(--moca-text-primary);
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 12px;
+}
+
+.moca-back-arrow {
+  width: 24px;
+  height: 24px;
+  color: var(--moca-text-primary);
+  cursor: pointer;
+}
+
+.moca-scroll-container {
+  padding-top: 48px; /* For status bar */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 30px;
+}
+
+.moca-banner {
+  background: linear-gradient(135deg, #2b1f1d 0%, #120b0a 100%);
+  padding: 32px 20px 24px 20px;
+  color: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+}
+
+.moca-banner::after {
+  content: '☕';
+  position: absolute;
+  right: -10px;
+  bottom: -15px;
+  font-size: 90px;
+  opacity: 0.12;
+  transform: rotate(-15deg);
+}
+
+.moca-badge {
+  background: var(--moca-light-brown);
+  color: #120b0a;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.moca-banner-title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.moca-banner-desc {
+  font-size: 12px;
+  color: #BCAAA4;
+  line-height: 1.5;
+  font-weight: 300;
+}
+
+.moca-banner-date {
+  font-size: 11px;
+  color: #8D6E63;
+  margin-top: 12px;
+  font-weight: 500;
+}
+
+/* 스텝형 카드 레이아웃 */
+.moca-steps-area {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.step-card {
+  background: var(--moca-card-bg);
+  border: 1px solid var(--moca-border);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.step-card.active {
+  border-color: var(--moca-light-brown);
+  box-shadow: 0 8px 24px rgba(212, 163, 115, 0.15);
+}
+
+.step-card.dimmed {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.step-number {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--moca-light-brown);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.step-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--moca-text-primary);
+  margin-bottom: 6px;
+}
+
+.step-card-desc {
+  font-size: 12px;
+  color: var(--moca-text-secondary);
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+/* 크레덴셜 카드 디스플레이 그래픽 */
+.credential-display {
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(135deg, #1e1b18 0%, #0f0d0c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  color: #FFF;
+  overflow: hidden;
+  transition: filter 0.5s ease, opacity 0.5s ease;
+}
+
+/* 미발급 상태 블러 효과 */
+.credential-display.unissued {
+  filter: blur(4px);
+  opacity: 0.6;
+}
+
+.credential-display-lock {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #FFF;
+}
+
+.icon-lock {
+  width: 20px;
+  height: 20px;
+}
+
+.cred-logo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cred-chip {
+  width: 28px;
+  height: 22px;
+  background: linear-gradient(135deg, #d4af37 0%, #aa7c11 100%);
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.cred-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.cred-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.cred-type {
+  font-size: 9px;
+  color: var(--moca-light-brown);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.cred-segment {
+  font-size: 16px;
+  font-weight: 700;
+  color: #FFF;
+  font-family: 'Noto Sans KR', sans-serif;
+  background: rgba(212, 163, 115, 0.15);
+  border: 1px solid rgba(212, 163, 115, 0.3);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+/* 레이저 스캔 효과 */
+.laser-line {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--air-cyan);
+  box-shadow: 0 0 12px 3px var(--air-cyan);
+  z-index: 5;
+  opacity: 0.8;
+}
+
+@keyframes laserScan {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+
+/* 레퍼럴 코드 디스플레이 */
+.referral-box {
+  background: #F0EDE9;
+  border: 1px dashed var(--moca-light-brown);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  margin-bottom: 12px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.referral-label {
+  font-size: 11px;
+  color: var(--moca-text-secondary);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.referral-code {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--moca-text-primary);
+  letter-spacing: 1px;
+}
+
+/* 모카 버튼 스타일 */
+.moca-btn {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.moca-btn-primary {
+  background: var(--moca-text-primary);
+  color: #FFFFFF;
+}
+
+.moca-btn-primary:hover {
+  background: #1C1B1A;
+}
+
+.moca-btn-accent {
+  background: var(--moca-light-brown);
+  color: #120b0a;
+}
+
+.moca-btn-accent:hover {
+  background: #C39262;
+}
+
+.step-card.active .moca-btn-primary {
+  animation: pulseButton 2s infinite;
+}
+
+@keyframes pulseButton {
+  0% { box-shadow: 0 0 0 0 rgba(47, 46, 44, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(47, 46, 44, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(47, 46, 44, 0); }
+}
+
+.step-card.active .moca-btn-accent {
+  animation: pulseAccentButton 2s infinite;
+}
+
+@keyframes pulseAccentButton {
+  0% { box-shadow: 0 0 0 0 rgba(212, 163, 115, 0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(212, 163, 115, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(212, 163, 115, 0); }
+}
+
+.step-card.completed-step::after {
+  content: '✓ 완료';
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #E8F5E9;
+  color: #2E7D32;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+
+.step-card.completed-step {
+  border-color: var(--moca-border);
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+.step-card.completed-step .moca-btn {
+  background: #E8E5E2;
+  color: #A09C98;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* 유의사항 섹션 */
+.moca-precautions {
+  margin-top: 10px;
+  padding: 20px 24px;
+  border-top: 1px solid var(--moca-border);
+  color: var(--moca-text-secondary);
+}
+
+.moca-precautions-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--moca-text-primary);
+  margin-bottom: 10px;
+}
+
+.moca-precautions-list {
+  list-style-type: none;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.moca-precautions-list li {
+  position: relative;
+  padding-left: 10px;
+  margin-bottom: 6px;
+}
+
+.moca-precautions-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--moca-light-brown);
+}
+
+/* ==========================================================================
+   Air SDK Bottom Sheet Styling
+   ========================================================================== */
+
+.air-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 80;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.air-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.air-bottom-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--air-bg);
+  border-radius: 32px 32px 0 0;
+  z-index: 85;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.1, 0.76, 0.55, 0.94);
+  padding: 12px 24px 34px 24px;
+  color: var(--air-text);
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+  font-family: 'Outfit', sans-serif;
+}
+
+.air-bottom-sheet.active {
+  transform: translateY(0);
+}
+
+.air-sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: #33333A;
+  border-radius: 2px;
+  margin: 0 auto 16px auto;
+}
+
+.air-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.air-logo {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, #FFFFFF, var(--air-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.air-close-btn {
+  font-size: 24px;
+  color: var(--air-text-muted);
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.air-close-btn:hover {
+  color: #FFF;
+}
+
+.air-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.air-subtitle {
+  font-size: 12px;
+  color: var(--air-text-muted);
+  line-height: 1.5;
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+
+.air-data-card {
+  background: var(--air-card);
+  border: 1px solid #202026;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.02);
+}
+
+.air-data-label {
+  font-size: 10px;
+  color: var(--air-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.air-data-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFF;
+  margin-bottom: 4px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.air-data-points {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--air-cyan);
+}
+
+.air-btn {
+  width: 100%;
+  background: var(--air-cyan);
+  border: none;
+  border-radius: 14px;
+  padding: 15px;
+  color: #000;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+}
+
+.air-btn:hover {
+  background: #33F5FF;
+  transform: translateY(-1px);
+}
+
+.air-btn:active {
+  transform: translateY(0);
+}
+
+/* 로딩 영역 */
+.air-loading-area {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0 24px 0;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.air-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(0, 240, 255, 0.1);
+  border-top: 3px solid var(--air-cyan);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.air-loading-text {
+  font-size: 13px;
+  color: #FFF;
+  font-weight: 500;
+  margin-bottom: 12px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.air-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: #1C1C24;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.air-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--air-cyan);
+  transition: width 0.15s linear;
+}
+
+/* 레이저 활성화 스캔 모드 */
+.laser-line.scanning {
+  display: block;
+  animation: laserScan 1.2s infinite ease-in-out;
+}
+
+/* OCB 지급 커스텀 토스트 알림 */
+.moca-toast {
+  position: absolute;
+  top: 54px; /* OCB 상태바 하단 노출 */
+  left: 16px;
+  right: 16px;
+  background: rgba(47, 46, 44, 0.96);
+  border: 1px solid var(--moca-light-brown);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  transform: translateY(-100px);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 99;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.moca-toast.active {
+  transform: translateY(0);
+}
+
+.moca-toast-icon {
+  font-size: 16px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+/* ==========================================================================
+   Compose Coffee App Mock-up Styling
+   ========================================================================== */
+
+.compose-splash {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--compose-yellow);
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--compose-dark);
+  font-family: 'Outfit', sans-serif;
+  transition: opacity 0.5s ease, cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.compose-splash.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.compose-splash-logo {
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.compose-splash-logo-symbol {
+  font-size: 48px;
+}
+
+.compose-splash-sub {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 12px;
+  letter-spacing: 2px;
+  opacity: 0.8;
+}
+
+/* 컴포즈 앱 내용 */
+.compose-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #FFFFFF;
+  color: var(--compose-dark);
+  animation: fadeIn 0.4s ease-out;
+  padding-top: 48px; /* For status bar */
+}
+
+.compose-header {
+  height: 50px;
+  border-bottom: 1px solid #EEEEEE;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: #FFFFFF;
+}
+
+.compose-back-arrow {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  color: var(--compose-dark);
+}
+
+.compose-header-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 12px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.compose-body {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.compose-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.compose-subtitle {
+  font-size: 12px;
+  color: #666666;
+  line-height: 1.5;
+  margin-bottom: 28px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 입력 필드 */
+.compose-form-group {
+  margin-bottom: 24px;
+}
+
+.compose-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.compose-input-wrapper {
+  position: relative;
+}
+
+.compose-input {
+  width: 100%;
+  background: #F5F5F5;
+  border: 1px solid #EAEAEA;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1A1A1A;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.compose-input:focus {
+  outline: none;
+  border-color: var(--compose-yellow);
+  background: #FFF;
+}
+
+.compose-input-info {
+  font-size: 11px;
+  color: #2E7D32;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+}
+
+.compose-input-info::before {
+  content: '✓';
+}
+
+.compose-input-info.error {
+  color: #D32F2F;
+}
+
+.compose-input-info.error::before {
+  content: '⚠️';
+}
+
+/* 컴포즈 버튼 */
+.compose-btn-register {
+  width: 100%;
+  background: var(--compose-dark);
+  color: var(--compose-yellow);
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: auto; /* Push to bottom */
+  text-align: center;
+}
+
+.compose-btn-register:hover {
+  background: #333333;
+}
+
+/* 모달 팝업 */
+.compose-modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 200;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.compose-modal-backdrop.active {
+  display: flex;
+}
+
+.compose-modal {
+  background: #FFFFFF;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 300px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transform: scale(0.9);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.compose-modal-backdrop.active .compose-modal {
+  transform: scale(1);
+}
+
+.compose-modal-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.compose-modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #1A1A1A;
+}
+
+.compose-modal-text {
+  font-size: 13px;
+  color: #666666;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.compose-modal-btn {
+  background: var(--compose-yellow);
+  color: var(--compose-dark);
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  width: 100%;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.compose-modal-btn:hover {
+  background: var(--compose-yellow-hover);
+}
+
+/* ==========================================================================
+   통합형 이벤트 카드 및 새로운 컴포넌트 스타일
+   ========================================================================== */
+
+/* 통합형 이벤트 카드 스타일 */
+.moca-unified-card {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: -12px;
+}
+
+/* 롤링 멘트 틱커 스타일 */
+.moca-rolling-ticker {
+  background: rgba(18, 11, 10, 0.04);
+  border: 1px dashed rgba(141, 110, 99, 0.2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  overflow: hidden;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ticker-content {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--moca-text-primary);
+  text-align: center;
+  width: 100%;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* 히어로 크레덴셜 카드 컨테이너 */
+.hero-credential-container {
+  width: 100%;
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* 미발급 카드(잠금) 스타일 */
+.cred-locked-card {
+  height: 150px;
+  background: linear-gradient(135deg, #181514 0%, #0c0a09 100%);
+  border: 1.5px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  animation: credPulse 2s infinite ease-in-out;
+}
+
+@keyframes credPulse {
+  0% { border-color: rgba(255, 255, 255, 0.15); box-shadow: inset 0 0 10px rgba(255,255,255,0.01); }
+  50% { border-color: var(--moca-light-brown); box-shadow: inset 0 0 20px rgba(212,163,115,0.15); }
+  100% { border-color: rgba(255, 255, 255, 0.15); box-shadow: inset 0 0 10px rgba(255,255,255,0.01); }
+}
+
+.cred-locked-icon {
+  font-size: 28px;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+}
+
+.cred-locked-text {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* 대형 발급완료 크레덴셜 카드 공통 스타일 */
+.moca-cred-large {
+  height: 180px;
+  border-radius: 16px;
+  padding: 20px;
+  color: #FFFFFF;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 크레덴셜 유형별 그라데이션 및 효과 */
+.moca-cred-large.card-morning {
+  background: linear-gradient(135deg, #FF7E5F 0%, #FEB47B 100%);
+  box-shadow: 0 12px 28px rgba(255, 126, 95, 0.3);
+}
+.moca-cred-large.card-lunch {
+  background: linear-gradient(135deg, #6d4c41 0%, #3e2723 100%);
+  box-shadow: 0 12px 28px rgba(109, 76, 65, 0.3);
+}
+.moca-cred-large.card-afternoon {
+  background: linear-gradient(135deg, #7F00FF 0%, #E100FF 100%);
+  box-shadow: 0 12px 28px rgba(127, 0, 255, 0.3);
+}
+.moca-cred-large.card-evening {
+  background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+  box-shadow: 0 12px 28px rgba(32, 58, 67, 0.35);
+}
+
+/* 크레덴셜 배지 스타일 */
+.cred-large-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cred-large-logo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  opacity: 0.85;
+}
+.cred-large-verified-badge {
+  background: #4caf50;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  animation: badgePop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.cred-large-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cred-large-title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.cred-large-meta {
+  font-size: 10px;
+  opacity: 0.75;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.cred-large-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 10px;
+}
+.cred-large-desc {
+  font-size: 11px;
+  opacity: 0.9;
+}
+.cred-large-emoji {
+  font-size: 28px;
+}
+
+/* 티켓 리워드(쿠폰) 디자인 */
+.moca-reward-area {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+}
+.moca-reward-area.active {
+  max-height: 300px;
+  margin-top: 8px;
+}
+
+.moca-coupon-ticket {
+  background: #FFFFFF;
+  border-radius: 12px;
+  color: #120b0a;
+  padding: 16px;
+  position: relative;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid #EFEBE9;
+}
+
+/* 티켓 좌우 동그란 반원 홈 디자인 */
+.moca-coupon-ticket::before, .moca-coupon-ticket::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  background: var(--moca-bg);
+  border-radius: 50%;
+  border: 1.5px solid #EFEBE9;
+  z-index: 2;
+}
+.moca-coupon-ticket::before { left: -8px; border-left: none; }
+.moca-coupon-ticket::after { right: -8px; border-right: none; }
+
+.ticket-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed #E0DCDA;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+.ticket-brand {
+  font-size: 11px;
+  font-weight: 700;
+  color: #8D6E63;
+  letter-spacing: 0.5px;
+}
+.ticket-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #120b0a;
+  margin-top: 2px;
+}
+.ticket-points-badge {
+  background: rgba(212, 163, 115, 0.15);
+  color: #8D6E63;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.ticket-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.ticket-barcode {
+  width: 80%;
+  height: 38px;
+  background: repeating-linear-gradient(
+    90deg,
+    #120b0a,
+    #120b0a 2px,
+    transparent 2px,
+    transparent 6px,
+    #120b0a 6px,
+    #120b0a 7px,
+    transparent 7px,
+    transparent 10px
+  );
+  opacity: 0.85;
+}
+.ticket-code {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: #5D4037;
+}
+
+/* 2차 링크 스타일 */
+.moca-link-button-area {
+  display: flex;
+  justify-content: center;
+  margin-top: -4px;
+}
+.moca-link-btn {
+  background: none;
+  border: none;
+  color: #8D6E63;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+.moca-link-btn:hover {
+  color: #5D4037;
+}
+
+/* 첫 화면 컨테이너 및 텍스트 스타일 */
+.coffee-start-container {
+  padding: 68px 20px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--moca-bg);
+  min-height: 100%;
+  justify-content: space-between;
+}
+
+.coffee-title-area {
+  margin-bottom: 20px;
+}
+
+.coffee-start-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #8D6E63;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.coffee-start-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--moca-text-primary);
+  line-height: 1.4;
+  word-break: keep-all;
+}
+
+.coffee-start-subtitle {
+  font-size: 12px;
+  color: var(--moca-text-secondary);
+  line-height: 1.6;
+  margin-top: 10px;
+  font-weight: 400;
+  word-break: keep-all;
+}
+
+.coffee-character-area {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.coffee-character-img {
+  width: 240px;
+  height: 240px;
+  object-fit: contain;
+}
+
+/* 툴팁 말풍선 스타일 */
+.coffee-tooltip {
+  position: relative;
+  background: rgba(78, 54, 41, 0.85);
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 20px;
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: bounceTooltip 2s infinite ease-in-out;
+}
+
+.coffee-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0;
+  border-style: solid;
+  border-color: rgba(78, 54, 41, 0.85) transparent;
+  display: block;
+  width: 0;
+}
+
+@keyframes bounceTooltip {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.coffee-btn-start {
+  background: #FFFFFF;
+  color: #120b0a;
+  border: none;
+  border-radius: 28px;
+  padding: 16px 40px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(78, 54, 41, 0.12);
+  transition: all 0.2s ease;
+  width: 85%;
+  margin-bottom: 12px;
+}
+
+.coffee-btn-start:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(78, 54, 41, 0.18);
+}
+
+.coffee-btn-start:active {
+  transform: translateY(0);
+}
+
+/* 결과 카드 디자인 */
+.coffee-result-container {
+  background: var(--moca-bg);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100%;
+}
+
+.coffee-result-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 24px 20px;
+  box-shadow: 0 8px 30px rgba(78, 54, 41, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.result-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.result-type-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.result-type-subtitle {
+  font-size: 13px;
+  color: var(--moca-text-secondary);
+  font-weight: 500;
+}
+
+.result-character-img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  margin-bottom: 20px;
+}
+
+/* 능력치 게이지 바 영역 */
+.result-stats-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.stat-label {
+  width: 60px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--moca-text-primary);
+}
+
+.stat-bar-container {
+  flex: 1;
+  height: 12px;
+  background: #EFEBE9;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  width: 0;
+  transition: width 1s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+/* 특징 설명 리스트 */
+.result-desc-list {
+  width: 100%;
+  list-style-type: none;
+  padding-top: 16px;
+  border-top: 1px solid #F5EBD9;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.result-desc-list li {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--moca-text-secondary);
+  position: relative;
+  padding-left: 14px;
+  word-break: keep-all;
+}
+
+.result-desc-list li::before {
+  content: '•';
+  position: absolute;
+  left: 2px;
+  top: 0;
+  color: var(--moca-light-brown);
+  font-weight: 800;
+}
+
+/* 게이지 바 색상 명세 */
+.bar-purple { background-color: #9B5DE5; }
+.bar-pink { background-color: #F15BB5; }
+.bar-yellow { background-color: #FEE440; }
+.bar-blue { background-color: #00BBF9; }
+
+/* 인증 배지 */
+.result-verified-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #4caf50;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 10;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ==========================================================================
+   Compose App Event Page Styles (Option A)
+   ========================================================================== */
+.compose-event-banner {
+  background: #FFE300;
+  color: #1a1a1a;
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  font-family: 'Noto Sans KR', sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.compose-event-banner .banner-tag {
+  font-size: 11px;
+  font-weight: 700;
+  background: #1a1a1a;
+  color: #FFE300;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+.compose-event-banner h3 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+.compose-event-banner p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+/* 결과 카드 */
+.compose-result-card {
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  color: #fff;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.compose-result-card .card-badge {
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 3px 10px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.compose-result-card .card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+.compose-result-card .card-subtitle {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+.compose-result-card .card-emoji-img {
+  font-size: 54px;
+  margin: 12px 0;
+}
+.compose-result-card .card-features {
+  text-align: left;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-top: 16px;
+  font-size: 11px;
+  line-height: 1.5;
+  list-style-type: none;
+  padding-left: 14px;
+}
+.compose-result-card .card-features li {
+  position: relative;
+  margin-bottom: 6px;
+}
+.compose-result-card .card-features li::before {
+  content: "•";
+  position: absolute;
+  left: -10px;
+}
+.compose-result-card .card-features li:last-child {
+  margin-bottom: 0;
+}
+
+/* 능력치 게이지 바 */
+.compose-stats-area {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+.compose-stat-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 11px;
+}
+.compose-stat-label {
+  width: 50px;
+  text-align: left;
+  opacity: 0.9;
+}
+.compose-stat-bar-container {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-left: 8px;
+}
+.compose-stat-bar-fill {
+  width: 0;
+  height: 100%;
+  background: #fff;
+  border-radius: 3px;
+  transition: width 1s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+/* 쿠폰 교환 폼 */
+.compose-coupon-form {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 16px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.compose-coupon-form .form-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  display: block;
+}
+.compose-coupon-code-box {
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
+  color: #333;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+.compose-coupon-code-box.registered {
+  background: #e8f5e9;
+  border-color: #a5d6a7;
+  color: #2e7d32;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+}
+.compose-btn-cta {
+  background: #1a1a1a;
+  color: #FFE300;
+  border: none;
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+.compose-btn-cta:active {
+  background: #333;
+}
+.compose-btn-cta.disabled {
+  background: #e0e0e0;
+  color: #9e9e9e;
+  cursor: not-allowed;
+}

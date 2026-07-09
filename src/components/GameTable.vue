@@ -83,14 +83,13 @@
     </div>
 
     <!-- 진행 상황 안내 배너 (귀여운 카툰 톤) -->
-    <div class="status-banner">
-      <p class="status-text">{{ statusMessage }}</p>
-      <div v-if="gameState === 'betting'" class="action-container">
-        <button class="retro-btn gold action-btn start-btn" @click="$emit('start-game')">시작!</button>
+    <div class="status-banner" v-if="gameState !== 'betting'">
+      <div class="status-card retro-box">
+        <p class="status-text">{{ statusMessage }}</p>
       </div>
-      <div v-if="gameState === 'result'" class="action-container">
-        <button v-if="selectedIndex === winningIndex" class="retro-btn gold action-btn next-btn" @click="$emit('next-round')">다음 스테이지로 ➡️</button>
-        <button v-else class="retro-btn action-btn next-btn" style="background: #ff7675;" @click="$emit('next-round')">다시 도전하기!</button>
+      <div class="action-container" :class="{ 'hidden-action': !hasActions }">
+        <button v-if="gameState === 'result' && selectedIndex === winningIndex" class="retro-btn gold action-btn next-btn" @click="$emit('next-round')">다음 스테이지로 ➡️</button>
+        <button v-else-if="gameState === 'result' && selectedIndex !== winningIndex" class="retro-btn action-btn next-btn" style="background: #ff7675;" @click="$emit('next-round')">다시 도전하기!</button>
       </div>
     </div>
   </div>
@@ -119,9 +118,12 @@ const emit = defineEmits<{
   (e: 'start-shuffling'): void;
   (e: 'finish-shuffling', finalWinningIndex: number): void;
   (e: 'select-cup', index: number): void;
-  (e: 'start-game'): void;
   (e: 'next-round'): void;
 }>()
+
+const hasActions = computed(() => {
+  return props.gameState === 'result'
+})
 
 // 컵 리스트 상태
 const cups = ref<CupItem[]>([])
@@ -144,22 +146,18 @@ const transitionSpeedMs = computed(() => `${props.shuffleSpeed}ms`)
 // 안내 메시지
 const statusMessage = computed(() => {
   switch (props.gameState) {
-    case 'betting':
-      return '[시작!]을 눌러 귀여운 햄스터를 숨겨보세요! 🐹'
     case 'showing_ball':
-      return '햄스터가 들어간 컵을 눈을 동그랗게 뜨고 잘 지켜보세요!'
+      return '햄스터가 숨어있는 컵을 잘 지켜보세요! 👀'
     case 'shuffling':
-      return '컵들이 섞이고 있어요! 햄스터가 어딨을까요? 👀'
+      return '컵이 섞이고 있어요! 어딨을까요? 👀'
     case 'picking':
-      return '햄스터가 숨어있는 주황색 컵을 골라보세요!'
+      return '햄스터가 숨은 주황색 컵을 골라보세요!'
     case 'result':
       if (props.selectedIndex === props.winningIndex) {
-        return '우와! 찾았습니다! 햄스터가 기뻐해요! 🎉🌻'
+        return '우와, 찾았습니다! 햄스터가 기뻐해요! 🎉'
       } else {
-        return '앗, 빈 컵이네요! 햄스터는 다른 곳에 있어요 😢'
+        return '앗, 빈 컵이네요! 다른 컵에 있어요 😢'
       }
-    case 'gameover':
-      return 'UP이 전부 떨어졌어요! 광고를 보고 충전해 보아요.'
     default:
       return ''
   }
@@ -271,11 +269,12 @@ function onCupClick(index: number) {
 
 <style scoped>
 .game-table-container {
-  margin: 20px auto;
+  margin: 0 auto;
   position: relative;
   width: 100%;
   max-width: 800px;
-  min-height: 380px;
+  flex-grow: 1;
+  min-height: 0;
   background: #fdfaf2;
   border-radius: 20px;
   padding: 0;
@@ -305,10 +304,9 @@ function onCupClick(index: number) {
   background: var(--table-bg);
   border-bottom: 20px solid #d2b48c;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  padding-bottom: 25px;
-  min-height: 280px;
+  min-height: 180px;
 }
 
 .mat-overlay {
@@ -332,11 +330,16 @@ function onCupClick(index: number) {
   height: 180px;
 }
 
-/* 컵 개수별 반응형 여백 조절 */
+/* 컵 개수별 반응형 여백 및 크기 조절 (좁은 화면에서 컵이 겹치지 않도록) */
 .cups-3 .cup-slot { width: 25%; }
 .cups-4 .cup-slot { width: 20%; }
 .cups-5 .cup-slot { width: 16%; }
 .cups-6 .cup-slot { width: 13%; }
+
+.cups-3 .cup-wrapper { width: 72px; height: 100px; }
+.cups-4 .cup-wrapper { width: 64px; height: 89px; }
+.cups-5 .cup-wrapper { width: 56px; height: 78px; }
+.cups-6 .cup-wrapper { width: 50px; height: 70px; }
 
 /* 개별 컵 슬롯 */
 .cup-slot {
@@ -368,7 +371,8 @@ function onCupClick(index: number) {
 }
 
 .cup-wrapper.lifted {
-  transform: translateY(-90px);
+  /* 컵 자체 높이 기준 비율이라 크기가 달라져도 항상 자연스럽게 들림 */
+  transform: translateY(-85%);
 }
 
 .cup-wrapper.wrong {
@@ -422,6 +426,10 @@ function onCupClick(index: number) {
   transform: translateY(0px) scale(1);
 }
 
+/* 컵 개수가 많아질수록 햄스터도 살짝 작게 */
+.cups-5 .ball-character { width: 50px; height: 50px; }
+.cups-6 .ball-character { width: 42px; height: 42px; }
+
 .hamster-svg {
   width: 100%;
   height: 100%;
@@ -452,8 +460,8 @@ function onCupClick(index: number) {
 /* 컵 선택 물음표 지시표 */
 .select-arrow {
   position: absolute;
-  top: -45px;
-  font-size: 1.8rem;
+  top: -110px;
+  font-size: 5rem;
   color: #ffcc00;
   text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
   animation: bounce-arrow 0.6s infinite alternate;
@@ -483,30 +491,86 @@ function onCupClick(index: number) {
 
 /* 상태 배너 (귀여운 카툰 톤) */
 .status-banner {
-  background: #fff;
-  border-top: 3.5px solid #000;
   padding: 12px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
   z-index: 3;
 }
 
+.status-card {
+  background: #ffffff;
+  padding: 14px 20px;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
 .status-text {
-  font-size: 1.15rem;
+  font-size: 17.6px;
   color: var(--text-dark);
   font-weight: bold;
   letter-spacing: 1px;
 }
 
+@media (max-width: 600px) {
+  .game-table-container {
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+  .cups-container {
+    height: 190px;
+  }
+  .cup-wrapper {
+    width: 78px;
+    height: 108px;
+  }
+  .cups-3 .cup-wrapper { width: 78px; height: 108px; }
+  .cups-4 .cup-wrapper { width: 64px; height: 89px; }
+  .cups-5 .cup-wrapper { width: 52px; height: 72px; }
+  .cups-6 .cup-wrapper { width: 44px; height: 61px; }
+  .ball-character {
+    width: 62px;
+    height: 62px;
+  }
+  .cups-4 .ball-character { width: 52px; height: 52px; }
+  .cups-5 .ball-character { width: 42px; height: 42px; }
+  .cups-6 .ball-character { width: 36px; height: 36px; }
+  .select-arrow {
+    top: -100px;
+    font-size: 4.4rem;
+  }
+  .status-banner {
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  }
+  .status-card {
+    padding: 12px 14px;
+  }
+}
+
 .action-container {
   margin-top: 15px;
+  min-height: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.2s ease, transform 0.2s ease, min-height 0.2s ease, margin-top 0.2s ease;
+}
+
+.action-container.hidden-action {
+  margin-top: 0;
+  min-height: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.9);
 }
 
 .action-btn {
   font-size: 1.25rem;
   min-width: 160px;
-}
-
-.start-btn {
-  background: #ffa502;
 }
 
 .next-btn {
