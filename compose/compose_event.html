@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compose Coffee x Moca 제휴 이벤트 상세</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --compose-yellow: #FFE300;
+      --compose-dark: #1A1A1A;
+      --bg-light: #F5F5F5;
+      --text-main: #333333;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', 'Inter', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px 10px;
+    }
+
+    /* 상단 미니 디바이스 및 결과 테스트 컨트롤러 */
+    .test-controller {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+    .test-controller-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #666;
+    }
+    .btn-group {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-select {
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-select.active {
+      background: var(--compose-dark);
+      color: var(--compose-yellow);
+      border-color: var(--compose-dark);
+    }
+
+    /* 메인 모바일 웹 뷰포트 컨테이너 */
+    .mobile-viewport {
+      width: 100%;
+      max-width: 450px;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* 앱 헤더 */
+    .compose-header {
+      height: 56px;
+      background: white;
+      border-bottom: 1px solid #eeeeee;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .compose-back-arrow {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      margin-right: 16px;
+    }
+    .compose-header-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--compose-dark);
+    }
+
+    /* 본문 스크롤 영역 */
+    .compose-body {
+      padding: 20px;
+      background: white;
+    }
+
+    /* 이벤트 안내 배너 */
+    .compose-event-banner {
+      background: var(--compose-yellow);
+      color: var(--compose-dark);
+      padding: 16px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(255, 227, 0, 0.15);
+    }
+    .compose-event-banner .banner-tag {
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--compose-dark);
+      color: var(--compose-yellow);
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .compose-event-banner h3 {
+      margin: 0 0 6px 0;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .compose-event-banner p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.5;
+      opacity: 0.9;
+      word-break: keep-all;
+    }
+
+    /* 커피 DNA 결과 카드 */
+    .compose-result-card {
+      border-radius: 18px;
+      padding: 24px 20px;
+      margin-bottom: 20px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transition: background 0.4s ease;
+    }
+    .compose-result-card .card-badge {
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 12px;
+      border-radius: 14px;
+      display: inline-block;
+      margin-bottom: 12px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+    .compose-result-card .card-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .compose-result-card .card-subtitle {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-top: 4px;
+      margin-bottom: 20px;
+    }
+    .compose-result-card .card-emoji-img {
+      font-size: 64px;
+      margin: 16px 0;
+    }
+
+    /* 능력치 게이지 바 */
+    .compose-stats-area {
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+    .compose-stat-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    .compose-stat-label {
+      width: 55px;
+      text-align: left;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+    .compose-stat-bar-container {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-left: 10px;
+    }
+    .compose-stat-bar-fill {
+      width: 0;
+      height: 100%;
+      background: white;
+      border-radius: 4px;
+      transition: width 1.2s cubic-bezier(0.1, 0.8, 0.2, 1);
+    }
+
+    /* 특징 상세 리스트 */
+    .compose-result-card .card-features {
+      text-align: left;
+      background: rgba(0, 0, 0, 0.22);
+      padding: 16px 18px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-size: 12px;
+      line-height: 1.6;
+      list-style-type: none;
+    }
+    .compose-result-card .card-features li {
+      position: relative;
+      margin-bottom: 8px;
+      padding-left: 14px;
+      word-break: keep-all;
+    }
+    .compose-result-card .card-features li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+    .compose-result-card .card-features li:last-child {
+      margin-bottom: 0;
+    }
+
+    /* 쿠폰 교환 폼 */
+    .compose-coupon-form {
+      background: white;
+      border: 1px solid #e8e8e8;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+    .compose-coupon-form .form-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--compose-dark);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .compose-coupon-code-box {
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 14px;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 16px;
+      text-align: center;
+      color: #333;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+    .compose-coupon-code-box.registered {
+      background: #e8f5e9;
+      border-color: #a5d6a7;
+      color: #2e7d32;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 14px;
+    }
+    .compose-btn-cta {
+      background: var(--compose-dark);
+      color: var(--compose-yellow);
+      border: none;
+      width: 100%;
+      padding: 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s, opacity 0.2s;
+    }
+    .compose-btn-cta:active {
+      transform: scale(0.98);
+    }
+    .compose-btn-cta.disabled {
+      background: #e0e0e0;
+      color: #9e9e9e;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* 쿠폰 등록 성공 모달 */
+    .compose-modal-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 20px;
+    }
+    .compose-modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .compose-modal {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 320px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .compose-modal-backdrop.active .compose-modal {
+      transform: scale(1);
+    }
+    .compose-modal-icon {
+      font-size: 44px;
+      margin-bottom: 12px;
+    }
+    .compose-modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--compose-dark);
+      margin-bottom: 8px;
+    }
+    .compose-modal-text {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      word-break: keep-all;
+    }
+    .compose-modal-btn {
+      background: var(--compose-yellow);
+      color: var(--compose-dark);
+      border: 1px solid var(--compose-dark);
+      font-weight: 700;
+      padding: 12px;
+      width: 100%;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+    .compose-modal-btn:hover {
+      background: #e6cc00;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 미니 제어 컨트롤러 -->
+  <div class="test-controller">
+    <div class="test-controller-title">🧬 커피 DNA 세그먼트 테스트 제어</div>
+    <div class="btn-group">
+      <button class="btn-select" onclick="switchSegment('Morning')">🌅 아침 유형</button>
+      <button class="btn-select active" onclick="switchSegment('Lunch')">🥤 점심 유형</button>
+      <button class="btn-select" onclick="switchSegment('Afternoon')">⚡ 오후 유형</button>
+      <button class="btn-select" onclick="switchSegment('Evening')">🌙 저녁 유형</button>
+    </div>
+  </div>
+
+  <!-- 메인 모바일 웹 컨테이너 -->
+  <div class="mobile-viewport">
+    
+    <!-- 앱 헤더 -->
+    <div class="compose-header">
+      <!-- 뒤로가기 화살표 SVG -->
+      <svg class="compose-back-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="compose-header-title">제휴 이벤트 상세</span>
+    </div>
+
+    <!-- 이벤트 상세 본문 -->
+    <div class="compose-body">
+      
+      <!-- 이벤트 안내 배너 -->
+      <div class="compose-event-banner">
+        <span class="banner-tag">Moca x Compose</span>
+        <h3>제휴 커피 혜택 교환</h3>
+        <p>나의 커피 수혈 DNA를 확인하고 컴포즈 아메리카노 무료 쿠폰 혜택으로 즉시 교환하세요!</p>
+      </div>
+
+      <!-- 동적 커피 DNA 결과 카드 -->
+      <div class="compose-result-card" id="composeResultCard">
+        <!-- JS로 동적 콘텐츠 주입 -->
+      </div>
+
+      <!-- 쿠폰 번호 교환 폼 -->
+      <div class="compose-coupon-form" id="couponFormContainer">
+        <!-- JS로 상태별 렌더링 -->
+      </div>
+
+    </div>
+
+    <!-- 쿠폰 등록 성공 모달 -->
+    <div class="compose-modal-backdrop" id="composeModalBackdrop">
+      <div class="compose-modal">
+        <div class="compose-modal-icon">🎁</div>
+        <h4 class="compose-modal-title">쿠폰 교환 완료</h4>
+        <p class="compose-modal-text">컴포즈 아메리카노 1잔 무료 쿠폰(1,800원 상당)이 발급되었습니다.<br>앱의 [마이 쿠폰함]에서 확인하실 수 있습니다.</p>
+        <button class="compose-modal-btn" onclick="confirmCouponExchange()">확인</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // 세그먼트 데이터
+    const coffeeSegments = {
+      "Morning": {
+        title: "생명수 수혈 DNA",
+        badge: "아침 06-10시 눈번쩍 생명수 수혈러",
+        emoji: "🌅",
+        gradient: "linear-gradient(135deg, #FF9966, #FF5E62)",
+        referralCode: "COMP_MORNING_W9K4A8",
+        stats: { energy: 95, social: 45, talk: 75, blitz: 40 },
+        features: [
+          "아침에 커피를 마시지 않으면 현생 시동이 아예 안 걸림",
+          "극강의 효율성을 추구하며 아침 수혈을 마쳐야 비로소 일잘러 모드 온",
+          "말 걸기 전 눈치껏 샷 추가 커피를 사다 주는 동료를 제일 아낌",
+          "오전의 나른함이나 멍 때리는 분위기를 견디기 힘들어함"
+        ]
+      },
+      "Lunch": {
+        title: "생존 커피 수혈 DNA",
+        badge: "점심 10-14시 식후 생존 커피 수혈러",
+        emoji: "🥤",
+        gradient: "linear-gradient(135deg, #8D6E63, #4E342E)",
+        referralCode: "COMP_LUNCH_W3B9X7",
+        stats: { energy: 60, social: 90, talk: 55, blitz: 85 },
+        features: [
+          "점심 식사 직후 차가운 아이스 아메리카노 수혈은 생존 필수 의식",
+          "사람들과 밥 먹고 다 같이 테이크아웃 카페로 달려갈 때 가장 활력 넘침",
+          "의견을 숨김없이 솔직하게 표현하며 모임 분위기를 주도하는 편",
+          "점심 메뉴 정하기부터 커피 내기 가위바위보까지 열정적으로 주도함"
+        ]
+      },
+      "Afternoon": {
+        title: "피로 타파 충전 DNA",
+        badge: "오후 14-17시 나른함 타파 샷추가러",
+        emoji: "⚡️",
+        gradient: "linear-gradient(135deg, #7F00FF, #E100FF)",
+        referralCode: "COMP_AFTERNOON_Z7R5D2",
+        stats: { energy: 85, social: 65, talk: 80, blitz: 50 },
+        features: [
+          "하루 중 당분과 피로가 최고조에 달해 샷추가 수혈이 없으면 기절 일보직전",
+          "끊임없이 들어오는 업무와 단톡방 알림 속에서도 결단력 있게 해결",
+          "시간 낭비와 영혼 없는 빈말을 싫어하고 스피디한 결론을 원함",
+          "일할 때는 누구보다 확실하지만, 쉴 때는 누구의 간섭도 원치 않음"
+        ]
+      },
+      "Evening": {
+        title: "하루 보상 힐링 DNA",
+        badge: "저녁 17-22시 퇴근길 하루 보상 힐링러",
+        emoji: "🌙",
+        gradient: "linear-gradient(135deg, #111827, #ec4899)",
+        referralCode: "COMP_EVENING_N2Y8U4",
+        stats: { energy: 40, social: 80, talk: 30, blitz: 95 },
+        features: [
+          "고단한 하루 일과를 마치고 따뜻한 커피 거품을 덮으며 평화를 찾는 유형",
+          "남의 이야기를 정말 경청해주고 공감을 잘해주는 따뜻한 프로 고민상담러",
+          "상대방의 기분을 세심하게 배려하느라 간혹 거절을 힘들어하는 편",
+          "퇴근 후 번개 모임보다는 약속된 소규모 만남이나 혼자만의 아늑한 힐링을 선호"
+        ]
+      }
+    };
+
+    // 로컬 상태 객체
+    let currentSegment = "Lunch";
+    let isCouponRegistered = false;
+
+    // 화면 렌더링 함수
+    function renderPage() {
+      const segData = coffeeSegments[currentSegment];
+      
+      // 1. 결과 카드 렌더링
+      const card = document.getElementById('composeResultCard');
+      card.style.background = segData.gradient;
+      card.innerHTML = `
+        <div class="card-badge">My Coffee DNA</div>
+        <h4 class="card-title">${segData.title}</h4>
+        <div class="card-subtitle">${segData.badge}</div>
+        <div class="card-emoji-img">${segData.emoji}</div>
+
+        <!-- 능력치 게이지 바 -->
+        <div class="compose-stats-area">
+          <div class="compose-stat-row">
+            <span class="compose-stat-label">에너지력</span>
+            <div class="compose-stat-bar-container">
+              <div class="compose-stat-bar-fill" style="width: ${segData.stats.energy}%"></div>
+            </div>
+          </div>
+          <div class="compose-stat-row">
+            <span class="compose-stat-label">모임력</span>
+            <div class="compose-stat-bar-container">
+              <div class="compose-stat-bar-fill" style="width: ${segData.stats.social}%"></div>
+            </div>
+          </div>
+          <div class="compose-stat-row">
+            <span class="compose-stat-label">팩폭력</span>
+            <div class="compose-stat-bar-container">
+              <div class="compose-stat-bar-fill" style="width: ${segData.stats.talk}%"></div>
+            </div>
+          </div>
+          <div class="compose-stat-row">
+            <span class="compose-stat-label">번개력</span>
+            <div class="compose-stat-bar-container">
+              <div class="compose-stat-bar-fill" style="width: ${segData.stats.blitz}%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 특징 상세 -->
+        <ul class="card-features">
+          ${segData.features.map(f => `<li>${f}</li>`).join('')}
+        </ul>
+      `;
+
+      // 2. 쿠폰 입력 폼 렌더링
+      const form = document.getElementById('couponFormContainer');
+      if (isCouponRegistered) {
+        form.innerHTML = `
+          <label class="form-label">등록 완료 쿠폰</label>
+          <div class="compose-coupon-code-box registered">
+            ✓ 무료 아메리카노 쿠폰 교환 완료
+          </div>
+          <button class="compose-btn-cta disabled" disabled>쿠폰 교환 완료</button>
+        `;
+      } else {
+        form.innerHTML = `
+          <label class="form-label">자동 완성된 쿠폰 코드</label>
+          <div class="compose-coupon-code-box">
+            ${segData.referralCode}
+          </div>
+          <button class="compose-btn-cta" onclick="openModal()">무료 커피 쿠폰 교환하기</button>
+        `;
+      }
+    }
+
+    // 세그먼트 전환 함수
+    function switchSegment(segmentKey) {
+      currentSegment = segmentKey;
+      isCouponRegistered = false; // 세그먼트 변경 시 교환 완료 상태 리셋
+
+      // 활성화 버튼 스타일 토글
+      const buttons = document.querySelectorAll('.btn-select');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      renderPage();
+    }
+
+    // 모달 제어 함수
+    function openModal() {
+      document.getElementById('composeModalBackdrop').classList.add('active');
+    }
+
+    function confirmCouponExchange() {
+      document.getElementById('composeModalBackdrop').classList.remove('active');
+      isCouponRegistered = true;
+      renderPage();
+    }
+
+    // 최초 실행
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPage();
+    });
+  </script>
+</body>
+</html>

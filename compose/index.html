@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moca x Compose Coffee Credential Simulator</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- 전체 시뮬레이터 컨테이너 -->
+  <div class="simulator-container">
+    
+    <!-- 아이폰 15 Pro 스타일 디바이스 목업 -->
+    <div class="iphone-device">
+      <!-- 물리 스피커/다이내믹 아일랜드 영역 -->
+      <div class="dynamic-island"></div>
+      
+      <!-- 볼륨 / 전원 버튼 모사 -->
+      <div class="physical-button side-left-top"></div>
+      <div class="physical-button side-left-bottom"></div>
+      <div class="physical-button side-right"></div>
+
+      <!-- 상단 상태 바 (Status Bar) -->
+      <div class="status-bar">
+        <div class="status-time">10:47</div>
+        <div class="status-icons">
+          <svg class="icon-signal" viewBox="0 0 24 24">
+            <path d="M2 22h20V2z" fill="currentColor"/>
+          </svg>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path d="M12 21l-12-12c5-5 14-5 19 0z" fill="currentColor"/>
+          </svg>
+          <div class="battery-container">
+            <span class="battery-percent">99%</span>
+            <div class="icon-battery"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 토스트 알림 (Toast Notification) -->
+      <div class="moca-toast" id="mocaToast">
+        <span class="moca-toast-icon">🪙</span>
+        <span class="moca-toast-text" id="mocaToastText">OK캐쉬백 3,000P 즉시 지급 완료!</span>
+      </div>
+
+      <!-- 디바이스 화면 뷰포트 (인터랙션 영역) -->
+      <div class="screen-content" id="screenContent">
+        <!-- JS에 의해 각 화면이 여기에 동적으로 로드 및 관리됩니다 -->
+      </div>
+      
+      <!-- Air SDK 바텀시트 백드롭 및 컨테이너 -->
+      <div class="air-backdrop" id="airBackdrop"></div>
+      <div class="air-bottom-sheet" id="airBottomSheet">
+        <div class="air-sheet-handle"></div>
+        <div class="air-sheet-content">
+          <div class="air-header">
+            <span class="air-logo">AIR</span>
+            <span class="air-close-btn" id="btnAirClose">&times;</span>
+          </div>
+          <div class="air-body">
+            <div class="air-title">Analyze Coffee Habits</div>
+            <p class="air-subtitle">Moca Chain 지갑을 연동하여 나의 커피 결제 데이터를 안전하게 분석합니다.</p>
+            
+            <div class="air-data-card">
+              <div class="air-data-label">OK캐쉬백 연결 회원</div>
+              <div class="air-data-value">OCB 회원 등급: VIP</div>
+              <div class="air-data-points">포인트 잔액: 100,000 P</div>
+            </div>
+
+            <!-- 로딩 화면 영역 -->
+            <div class="air-loading-area" id="airLoadingArea">
+              <div class="air-spinner"></div>
+              <div class="air-loading-text" id="airLoadingText">커피 수혈 결제 내역 분석 중...</div>
+              <div class="air-progress-bar">
+                <div class="air-progress-fill" id="airProgressFill"></div>
+              </div>
+            </div>
+
+            <!-- 동의 버튼 -->
+            <button class="air-btn" id="btnAirConfirm">Confirm</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 하단 홈 바 -->
+      <div class="home-indicator"></div>
+    </div>
+
+    <!-- 외부 제어 및 정보 패널 -->
+    <div class="control-panel">
+      <button class="btn-reset" id="btnReset">
+        <svg viewBox="0 0 24 24" class="icon-reset">
+          <path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" fill="currentColor"/>
+        </svg>
+        시뮬레이션 초기화 (Reset)
+      </button>
+    </div>
+
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>
